@@ -1,0 +1,282 @@
+
+        :root {
+            --primary-color: #00aaff;
+            --primary-dark: #0088cc;
+            --text-dark: #575656;
+            --text-light: #f9f9f9;
+            --form-bg: rgba(255, 255, 255, 0.85);
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --border-color: #eee;
+            --shadow-light: rgba(0, 170, 255, 0.3);
+            --shadow-dark: rgba(0, 170, 255, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            /* CAMBIO: Alinear el contenido del body al inicio del eje principal (vertical) */
+            align-items: flex-start; 
+            position: relative;
+            /* CAMBIO: Añadir un padding superior para el espacio que antes creaban los <br> */
+            padding-top: 50px; 
+            padding-bottom: 50px; /* Opcional: para asegurar espacio en la parte inferior si el contenido es largo */
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('../imagenes/banner.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-bg);
+            z-index: -1;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            /* CAMBIO: Justificar los elementos al inicio del contenedor principal */
+            justify-content: flex-start; 
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            gap: 40px; /* Esto crea el espacio entre la bienvenida y el formulario */
+        }
+
+        .welcome-section {
+            max-width: 500px;
+            text-align: center;
+            color: var(--text-light);
+            padding: 20px;
+        }
+        
+        .welcome-section h1 {
+            font-size: clamp(2.5rem, 8vw, 3rem);
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            font-size: clamp(1rem, 3.5vw, 1.1rem);
+            margin-bottom: 15px;
+        }
+
+        .small-text {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 20px;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .form-section {
+            background: var(--form-bg);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow-dark);
+            text-align: center;
+            width: 90%;
+            max-width: 380px;
+            color: var(--text-dark);
+        }
+
+        .form-section h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: var(--primary-dark);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 15px 45px 15px 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+            color: var(--text-dark);
+            font-size: 16px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--shadow-light);
+        }
+
+        .input-group select {
+            padding-right: 45px;
+        }
+        
+        .input-group input::placeholder {
+            color: #999;
+        }
+        
+        .input-group i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: var(--text-dark);
+        }
+        
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            align-self: flex-end;
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-color);
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .form-button:hover {
+            transform: translateY(-3px);
+            background-color: var(--primary-dark);
+            box-shadow: 0 8px 20px var(--shadow-dark);
+        }
+
+        .link-text {
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .link-text a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .link-text a:hover {
+            color: var(--primary-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        /* Media Queries para pantallas grandes (laptops y desktops) */
+        @media (min-width: 768px) {
+            body {
+                /* CAMBIO: En desktop, volvemos a centrar verticalmente */
+                align-items: center;
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            .main-container {
+                flex-direction: row;
+                gap: 60px;
+                align-items: center;
+            }
+            .welcome-section {
+                text-align: left;
+            }
+            .form-section {
+                margin-top: 0;
+            }
+            .options {
+                flex-direction: row;
+                align-items: center;
+                gap: 0;
+            }
+            .forgot-password {
+                align-self: auto;
+            }
+        }
+        
+        /* Media Query para pantallas muy pequeñas (smartphones) */
+        @media (max-width: 480px) {
+            .form-section {
+                padding: 30px 20px;
+            }
+            .options {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            .forgot-password {
+                align-self: center;
+            }
+        }

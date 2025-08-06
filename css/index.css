@@ -1,0 +1,232 @@
+    /* Global Styles & Resets */
+    :root {
+        --primary-color: #00aaff;
+        --primary-dark: #0088cc;
+        --text-dark: #333;
+        --text-light: #f9f9f9;
+        --bg-light: #ffffff;
+        --shadow-light: rgba(0, 170, 255, 0.3);
+        --shadow-dark: rgba(0, 170, 255, 0.4);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header {
+        background: var(--bg-light);
+        border-bottom: 3px solid var(--primary-color);
+        padding: 15px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: fixed; /* Makes header sticky */
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo img {
+        height: 60px;
+        border-radius: 10px;
+    }
+    
+    /* Navigation Desktop */
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .nav-list {
+        list-style: none;
+        display: flex;
+        gap: 30px;
+        margin: 0;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 18px;
+        position: relative;
+        padding-bottom: 8px;
+    }
+
+    .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--primary-color);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: #fff;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px var(--shadow-light);
+        display: inline-block; /* Ensures consistent padding and alignment */
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 14px var(--shadow-dark);
+    }
+
+    /* Hamburger Menu Icon (Hidden on Desktop) */
+    .hamburger {
+        display: none;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .hamburger .bar {
+        width: 28px;
+        height: 3px;
+        background-color: var(--text-dark);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+
+    /* Hero Section */
+    .hero {
+        background: url('../imagenes/banner.png') no-repeat center center/cover; /* Placeholder URL */
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: var(--text-light);
+        position: relative;
+        padding-top: 90px; /* Offset for sticky header */
+    }
+
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dark overlay for better text contrast */
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 90%;
+    }
+
+    .hero-content h1 {
+        font-size: 5rem; /* Using rem for better scalability */
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        font-weight: 900;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-content p {
+        font-size: 1.75rem;
+        font-weight: 300;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    }
+    
+    /* RESPONSIVE DESIGN - MEDIA QUERIES */
+
+    /* For Tablets and smaller devices */
+    @media (max-width: 992px) {
+        .hero-content h1 {
+            font-size: 4rem;
+        }
+        .hero-content p {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* For Mobile Phones */
+    @media (max-width: 768px) {
+        /* Show Hamburger and hide Desktop Nav */
+        .hamburger {
+            display: flex;
+        }
+
+        .nav-menu {
+            position: fixed;
+            left: -100%; /* Start off-screen */
+            top: 91px; /* Position below header */
+            gap: 0;
+            flex-direction: column;
+            background-color: var(--bg-light);
+            width: 100%;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        /* This class will be toggled with JavaScript */
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .nav-list {
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+        }
+
+        .nav-item {
+            border-top: 1px solid #eee;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 20px 0;
+        }
+        
+        .btn-login {
+            margin: 20px 0;
+        }
+
+        /* Adjust Hero Text for mobile */
+        .hero-content h1 {
+            font-size: 2.8rem;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+        }
+    }
