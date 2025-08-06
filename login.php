@@ -7,38 +7,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $dni = $_POST["dni"];
     $password = $_POST["password"];
 
-    // Buscar usuario por DNI
-    $sql = "SELECT * FROM usuario WHERE cDNI = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $dni);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
+    try {
+        // Llamar al procedimiento almacenado
+        $stmt = $conn->prepare("CALL sp_login_usuario(?)");
+        $stmt->execute([$dni]);
 
-    if ($resultado->num_rows === 1) {
-        $usuario = $resultado->fetch_assoc();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verificar contraseña
-        if (password_verify($password, $usuario["cContrasena"])) {
-            // Guardar datos importantes en sesión
-            $_SESSION["usuario"] = [
-                "nUsuario"    => $usuario["nUsuario"],
-                "cNombres"    => $usuario["cNombres"],
-                "nRol"        => $usuario["nRol"],
-                "cDNI"        => $usuario["cDNI"],
-                "cCorreo"     => $usuario["cCorreo"],
-                "cUsuario"    => $usuario["cUsuario"] ?? '',
-            ];
+        if ($usuario) {
+            // Verificar contraseña
+            if (password_verify($password, $usuario["cContrasena"])) {
+                $_SESSION["usuario"] = [
+                    "nUsuario" => $usuario["nUsuario"],
+                    "cNombres" => $usuario["cNombres"],
+                    "nRol"     => $usuario["nRol"],
+                    "cDNI"     => $usuario["cDocumento"],
+                    "cCorreo"  => $usuario["cCorreo"],
+                    "cUsuario" => $usuario["cUsuario"] ?? ''
+                ];
 
-            echo "<script>alert('Inicio de sesión exitoso'); window.location.href='index.php';</script>";
+                echo "<script>alert('Inicio de sesión exitoso'); window.location.href='index.php';</script>";
+            } else {
+                echo "<script>alert('Contraseña incorrecta'); window.location.href='login.php';</script>";
+            }
         } else {
-            echo "<script>alert('Contraseña incorrecta'); window.location.href='login.php';</script>";
+            echo "<script>alert('DNI no encontrado'); window.location.href='login.php';</script>";
         }
-    } else {
-        echo "<script>alert('DNI no encontrado'); window.location.href='login.php';</script>";
-    }
 
-    $stmt->close();
-    $conn->close();
+        $stmt->closeCursor(); // Necesario para liberar el procedimiento
+    } catch (PDOException $e) {
+        echo "<script>alert('Error en el login: " . $e->getMessage() . "');</script>";
+    }
 }
 ?>
 

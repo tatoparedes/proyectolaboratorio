@@ -8,26 +8,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $apellido_materno = $_POST["apellido_materno"];
     $correo = $_POST["correo"];
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $rol = $_POST["rol"]; // este es el nRol que viene del formulario
+    $rol = $_POST["rol"];
 
     if (preg_match("/^[0-9]{8}$/", $dni)) {
-        $sql = "INSERT INTO usuario (cDNI, cNombres, cApePaterno, cApeMaterno, cCorreo, cContrasena, nRol)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssi", $dni, $nombres, $apellido_paterno, $apellido_materno, $correo, $password, $rol);
+        try {
+            $stmt = $conn->prepare("CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$dni, $nombres, $apellido_paterno, $apellido_materno, $correo, $password, $rol]);
 
-        if ($stmt->execute()) {
             echo "<script>alert('Usuario registrado correctamente'); window.location.href='login.php';</script>";
-        } else {
-            echo "<script>alert('Error al registrar. El DNI o correo ya existe.');</script>";
+        } catch (PDOException $e) {
+            echo "<script>alert('Error al registrar: " . $e->getMessage() . "');</script>";
         }
-
-        $stmt->close();
     } else {
         echo "<script>alert('El DNI debe tener exactamente 8 dígitos.');</script>";
     }
-
-    $conn->close();
 }
 ?>
 
