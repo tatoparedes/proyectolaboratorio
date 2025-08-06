@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
 
     // Buscar usuario por DNI
-    $sql = "SELECT * FROM Usuario WHERE cDNI = ?";
+    $sql = "SELECT * FROM usuario WHERE cDNI = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $dni);
     $stmt->execute();
