@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+$usuarioNombre = ""; // Definir por defecto para evitar errores de variable no definida
+
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
     exit();
@@ -11,17 +13,16 @@ require_once "conexion.php";
 $dni = $_SESSION['usuario']['cDNI'];
 
 try {
-
-    $stmt = $conn->prepare("CALL sp_verificar_usuario(?)");
+    $stmt = $conn->prepare("CALL sp_verificar_rol(?)");
     $stmt->execute([$dni]);
 
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario) {
-        $nombre = $usuario['cNombres'];
+        $usuarioNombre = htmlspecialchars($usuario['cNombres']); // Guardamos para otras partes
         $rol = $usuario['nRol'];
 
-        echo "<h2>Hola, $nombre</h2>";
+        echo "<h2>Bienvenido, $usuarioNombre</h2>";
         echo "<a href='logout.php'>Cerrar sesión</a><br><br>";
 
         if ($rol == 1) {
@@ -37,6 +38,6 @@ try {
 
     $stmt->closeCursor();
 } catch (PDOException $e) {
-    echo "<script>alert('Error al cargar datos del usuario: " . $e->getMessage() . "');</script>";
+    echo "<script>alert('Error al verificar rol: " . $e->getMessage() . "');</script>";
 }
 ?>

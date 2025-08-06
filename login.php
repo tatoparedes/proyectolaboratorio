@@ -8,20 +8,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
 
     try {
-        // Llamar al procedimiento almacenado
-        $stmt = $conn->prepare("CALL sp_login_usuario(?)");
-        $stmt->execute([$dni]);
+        // Llamar al procedimiento almacenado con 2 parámetros
+        $stmt = $conn->prepare("CALL sp_login_usuario(:dni, :password)");
+        $stmt->bindParam(':dni', $dni);
+        $stmt->bindParam(':password', $password); // aunque no se use dentro del SP, se envía por estructura
+        $stmt->execute();
 
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($usuario) {
-            // Verificar contraseña
+            // Verificar contraseña en PHP
             if (password_verify($password, $usuario["cContrasena"])) {
                 $_SESSION["usuario"] = [
                     "nUsuario" => $usuario["nUsuario"],
                     "cNombres" => $usuario["cNombres"],
                     "nRol"     => $usuario["nRol"],
-                    "cDNI"     => $usuario["cDocumento"],
+                    "cDNI"     => $usuario["cDNI"], // CORREGIDO
                     "cCorreo"  => $usuario["cCorreo"],
                     "cUsuario" => $usuario["cUsuario"] ?? ''
                 ];
@@ -34,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo "<script>alert('DNI no encontrado'); window.location.href='login.php';</script>";
         }
 
-        $stmt->closeCursor(); // Necesario para liberar el procedimiento
+        $stmt->closeCursor(); // Libera el resultado del SP
     } catch (PDOException $e) {
         echo "<script>alert('Error en el login: " . $e->getMessage() . "');</script>";
     }
