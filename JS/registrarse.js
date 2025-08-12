@@ -1,54 +1,58 @@
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginSection = document.getElementById('login-section');
-            const signupSection = document.getElementById('signup-section');
-            const showSignupLink = document.getElementById('show-signup-link');
-            const showLoginLink = document.getElementById('show-login-link');
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
+    document.addEventListener('DOMContentLoaded', () => {
+        const dniInput = document.querySelector('input[name="dni"]');
+        const nombresInput = document.querySelector('input[name="nombres"]');
+        const apellidoPaternoInput = document.querySelector('input[name="apellido_paterno"]');
+        const apellidoMaternoInput = document.querySelector('input[name="apellido_materno"]');
 
-            // Event listener for showing the sign-up form
-            showSignupLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginSection.classList.add('hidden');
-                signupSection.classList.remove('hidden');
-            });
+        dniInput.addEventListener('input', async (e) => {
+            const dni = e.target.value;
 
-            // Event listener for showing the login form
-            showLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                signupSection.classList.add('hidden');
-                loginSection.classList.remove('hidden');
-            });
+            // Limpia los campos y remueve el atributo readonly si el DNI es incompleto
+            if (dni.length < 8) {
+                nombresInput.value = '';
+                apellidoPaternoInput.value = '';
+                apellidoMaternoInput.value = '';
+                nombresInput.removeAttribute('readonly');
+                apellidoPaternoInput.removeAttribute('readonly');
+                apellidoMaternoInput.removeAttribute('readonly');
+                return;
+            }
+            
+            // Si el DNI tiene 8 dígitos, realiza la consulta
+            if (dni.length === 8) {
+                try {
+                    const response = await fetch('registro.php?dni=' + dni);
+                    const data = await response.json();
 
-            // Event listener for the login form submission
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                const level = document.getElementById('login-level').value;
+                    if (!data.error) {
+                        nombresInput.value = data.nombres;
+                        apellidoPaternoInput.value = data.apellidoPaterno;
+                        apellidoMaternoInput.value = data.apellidoMaterno;
 
-                if (email && password && level) {
-                    alert('¡Inicio de sesión exitoso!');
-                    console.log('Intento de inicio de sesión con:', { email, password, level });
-                } else {
-                    alert('Por favor, rellena todos los campos.');
+                        // **Añadir el atributo readonly para bloquear los campos**
+                        nombresInput.setAttribute('readonly', 'readonly');
+                        apellidoPaternoInput.setAttribute('readonly', 'readonly');
+                        apellidoMaternoInput.setAttribute('readonly', 'readonly');
+                    } else {
+                        // Si hay un error, limpia los campos pero permite editarlos
+                        nombresInput.value = '';
+                        apellidoPaternoInput.value = '';
+                        apellidoMaternoInput.value = '';
+                        nombresInput.removeAttribute('readonly');
+                        apellidoPaternoInput.removeAttribute('readonly');
+                        apellidoMaternoInput.removeAttribute('readonly');
+                        alert(data.error);
+                    }
+                } catch (error) {
+                    console.error('Error al consultar DNI:', error);
+                    nombresInput.value = '';
+                    apellidoPaternoInput.value = '';
+                    apellidoMaternoInput.value = '';
+                    nombresInput.removeAttribute('readonly');
+                    apellidoPaternoInput.removeAttribute('readonly');
+                    apellidoMaternoInput.removeAttribute('readonly');
+                    alert('Error al conectar con el servicio de DNI.');
                 }
-            });
-
-            // Event listener for the sign-up form submission
-            signupForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
-                const level = document.getElementById('signup-level').value;
-
-                if (email && password && level) {
-                    alert(`¡Registro exitoso! Nivel seleccionado: ${level}`);
-                    console.log('Intento de registro con:', { email, password, level });
-                } else {
-                    alert('Por favor, rellena todos los campos.');
-                }
-            });
+            }
         });
+    });

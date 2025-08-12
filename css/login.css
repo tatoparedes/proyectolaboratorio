@@ -64,14 +64,16 @@
             align-items: center;
             width: 100%;
             max-width: 1200px;
-            gap: 40px;
+            /* Eliminamos la propiedad 'gap' aquí */
             padding: 20px;
         }
 
         .welcome-section {
+            width: 100%;
             max-width: 500px;
             text-align: center;
             color: var(--text-light);
+            margin-bottom: 20px; /* Agregamos un margen solo en la parte inferior */
         }
         
         .welcome-section h1 {
@@ -112,12 +114,30 @@
             width: 90%;
             max-width: 380px;
             color: var(--text-dark);
+            /* Eliminamos el margen auto para móviles */
         }
 
         .form-section h2 {
             font-size: 36px;
             margin-bottom: 30px;
             color: var(--primary-dark);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo i {
+            font-size: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 24px;
+            font-weight: bold;
         }
 
         .input-group {
@@ -167,6 +187,34 @@
             color: #999;
             pointer-events: none;
         }
+        
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .remember-me input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            color: var(--primary-dark);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-color);
+        }
 
         .form-button {
             width: 100%;
@@ -210,14 +258,25 @@
             .main-container {
                 flex-direction: row;
                 align-items: center;
+                justify-content: space-between;
+                gap: 80px; /* La separación se aplica solo en escritorio */
             }
             
             .welcome-section {
                 text-align: left;
+                flex: 1;
+                margin-bottom: 0; /* Removido el margen extra en pantallas grandes */
             }
             
             .form-section {
-                width: 100%;
+                width: auto;
+                max-width: 400px;
+                flex: 1;
+                margin: 0;
+            }
+            
+            .logo {
+                justify-content: flex-start;
             }
         }
         

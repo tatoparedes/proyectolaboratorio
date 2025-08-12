@@ -1,4 +1,5 @@
 <?php
+// Lógica para manejar el formulario POST (registro de usuario)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     require_once "conexion.php";
 
@@ -22,6 +23,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         echo "<script>alert('El DNI debe tener exactamente 8 dígitos.');</script>";
     }
+    // Finaliza la ejecución del script si se procesó un POST
+    exit; 
+}
+
+// Lógica para manejar la solicitud de la API de RENIEC
+if (isset($_GET['dni'])) {
+    header('Content-Type: application/json');
+
+    $token = 'apis-token-17367.emx6cDVIZHq6KVbm7wb4Kl5uSKqvupIl';
+    $dni = $_GET['dni'];
+
+    // Validar el DNI antes de la consulta
+    if (!preg_match('/^\d{8}$/', $dni)) {
+        die(json_encode(['error' => 'El DNI no es válido.']));
+    }
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.apis.net.pe/v2/reniec/dni?numero=' . $dni,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => 1,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 2,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Referer: https://apis.net.pe/consulta-dni-api',
+            'Authorization: Bearer ' . $token
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+
+    if (curl_errno($curl)) {
+        die(json_encode(['error' => 'Error en la conexión: ' . curl_error($curl)]));
+    }
+    if ($httpCode !== 200) {
+        die(json_encode(['error' => 'Error al consultar la API, código: ' . $httpCode]));
+    }
+
+    echo $response;
+    exit; // Finaliza la ejecución después de enviar la respuesta JSON
 }
 ?>
 
@@ -29,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorio Clínico - Registro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/registrarse.css">
@@ -55,11 +102,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h2>Regístrate</h2>
         <form method="POST" action="registro.php">
             <div class="input-group">
-            <select name="rol" required>
-                <option value="" disabled selected>Selecciona tu Rol</option>
-                <option value="1">Alumno</option> <!-- 1 = nRol de Alumno -->
-                <option value="2">Docente</option>
-            </select>
+                <select name="rol" required>
+                    <option value="" disabled selected>Selecciona tu Rol</option>
+                    <option value="1">Alumno</option>
+                    <option value="2">Docente</option>
+                </select>
                 <i class="fas fa-caret-down"></i>
             </div>
             <div class="input-group">
@@ -94,5 +141,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
     </div>
 </main>
+<script src="JS/registrarse.js"></script>
 </body>
 </html>
