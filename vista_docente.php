@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL); // Muestra todos los tipos de errores
+ini_set('display_errors', 1); // Activa la visualización en pantalla
+ini_set('display_startup_errors', 1); // Muestra errores al iniciar
+
 require_once 'conexion.php';  // Aquí está tu $conn PDO
 $usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 6;
 $usuarioNombre = isset($_SESSION["usuario"]["cNombres"]) ? $_SESSION["usuario"]["cNombres"] : null;
@@ -10,31 +14,39 @@ function limpiar($dato) {
     $dato = htmlspecialchars($dato, ENT_QUOTES, 'UTF-8');
     return $dato;
 }
+
+   echo "<script>console.log('PHP dice: " . "a" . "');</script>";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $ideditar = intval($_POST['id_familia_edit']);
+    
     // Agregar Familia
-    if (isset($_POST['nombre_familia']) && !isset($_POST['editar_familia'])) {
+    if (isset($_POST['nombre_familia']) && $ideditar <=0) {
         $nombre = limpiar($_POST['nombre_familia']);
         if ($nombre !== '') {
             $stmt = $conn->prepare("INSERT INTO familia (cFamilia, nUsuario) VALUES (?, ?)");
             $stmt->execute([$nombre, $usuarioId]);
-            header("Location: vista_docente.php");
+            header("Location: vista_docente.php#panel-familias");
             exit;
         }
     }
+
     // Editar Familia
-    if (isset($_POST['editar_familia'], $_POST['id_familia_edit'])) {
+    if ($ideditar >0) {
         $id = intval($_POST['id_familia_edit']);
-        $nombre = limpiar($_POST['editar_familia']);
+        $nombre = limpiar($_POST['nombre_familia']);
         if ($id > 0 && $nombre !== '') {
-            $stmt = $conn->prepare("UPDATE familia SET cFamilia=? WHERE nFamilia=? AND nUsuario=?");
-            $stmt->execute([$nombre, $id, $usuarioId]);
-            header("Location: vista_docente.php");
+            //$stmt = $conn->prepare("UPDATE familia SET cFamilia=? WHERE nFamilia=? AND nUsuario=?");
+            $stmt = $conn->prepare("UPDATE familia SET cFamilia=? WHERE nFamilia=?");
+            //$stmt->execute([$nombre, $id, $usuarioId]);
+            $stmt->execute([$nombre, $id]);
+            header("Location: vista_docente.php#panel-familias");
             exit;
         }
     }
+
     // Eliminar Familia
     if (isset($_POST['eliminar_familia'])) {
-        $id = intval($_POST['eliminar_familia']);
+        $id = intval($_POST['id_familia']);
         if ($id > 0) {
             // Verificar que no tenga géneros asociados
             $check = $conn->prepare("SELECT COUNT(*) FROM Genero WHERE nFamilia=?");
@@ -44,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $conn->prepare("DELETE FROM familia WHERE nFamilia=? AND nUsuario=?");
                 $stmt->execute([$id, $usuarioId]);
             }
-            header("Location: vista_docente.php");
+            header("Location: vista_docente.php#panel-familias");
             exit;
         }
     }
@@ -296,6 +308,7 @@ $pruebas = $stmt->fetchAll();
                         <h4>Agregar Nueva Familia</h4>
                         <form id="form-familias" method="POST" action="vista_docente.php">
                             <div class="form-group">
+                                <input type="hidden" id="id_familia_edit" name="id_familia_edit" value="0" >
                                 <label for="nombre_familia">Nombre de la Familia:</label>
                                 <input type="text" id="nombre_familia" name="nombre_familia" required>
                             </div>
@@ -306,9 +319,32 @@ $pruebas = $stmt->fetchAll();
                         <div class="table-container">
                             <table id="table-familias">
                                 <thead>
-                                    <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
+                                    <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>                                    
                                 </thead>
                                 <tbody>
+                                    <?php
+                                         
+                                    $sql = 'SELECT * FROM familia';
+                                    $stmt = $conn->prepare($sql);                                    
+                                    $stmt->execute();
+                                    $familiass = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                         foreach ($familiass as $prod){
+                                           echo '<tr>';
+                                           echo '<td>';
+                                           echo $prod['nFamilia'];
+                                           echo '</td>';                                
+                                           echo '<td>';
+                                           echo $prod['cFamilia'];
+                                           echo '</td>'  ;                                                                           
+                                          
+                                           echo '<td class="table-actions">';
+                                           echo '<a href="#" class="btn-action btn-edit-familia" data-id = '.  $prod['nFamilia'] .'  data-nombre = '. $prod['cFamilia'] .'>Editar</a>';
+                                           echo '<a href="#" class="btn-action btn-delete" data-id = '.  $prod['nFamilia'] .'>Eliminar</a>';
+                                           echo '</td>';
+                                           echo '</tr>';
+                                        }
+                                       
+                                    ?>                                    
                                 </tbody>
                             </table>
                         </div>

@@ -1,20 +1,10 @@
             // ---- NUEVA LÓGICA PARA EDITAR Y ELIMINAR FAMILIAS ----
-            document.getElementById('table-familias').addEventListener('click', function(e) {
-              if (e.target.classList.contains('btn-edit-familia')) {
+            document.getElementById('table-familias').addEventListener('click', function(e) {               
+               
+
+                if (e.target.classList.contains('btn-delete')) {                
                   e.preventDefault();
-                  const id = e.target.dataset.id;
-                  const nombre = e.target.dataset.nombre;
-                  
-                  document.getElementById('nombre_familia').value = nombre;
-                  document.getElementById('id_familia_edit').value = id;
-                  
-                  const form = document.getElementById('form-familias');
-                  form.querySelector('.btn-submit').textContent = 'Actualizar Familia';
-                  form.querySelector('.btn-submit').name = 'editar_familia';
-              }
-              if (e.target.classList.contains('btn-delete-familia')) {
-                  e.preventDefault();
-                  if (confirm('¿Estás seguro de que quieres eliminar esta familia?')) {
+                  if (confirm('¿Estás seguro de que quieres eliminar esta familia?')) {                                        
                       const id = e.target.dataset.id;
                       const form = document.createElement('form');
                       form.method = 'POST';
@@ -37,6 +27,27 @@
                       form.submit();
                   }
               }
+
+
+
+              if (e.target.classList.contains('btn-edit-familia')) {
+                  e.preventDefault();                  
+                  const id = e.target.dataset.id;
+                  const nombre = e.target.dataset.nombre;
+
+                  
+                  
+                  document.getElementById('nombre_familia').value = nombre;
+                  document.getElementById('id_familia_edit').value = id;
+
+                  console.log(document.getElementById('nombre_familia').value);
+                  console.log(document.getElementById('id_familia_edit').value);
+
+                  
+                  const form = document.getElementById('form-familias');
+                  form.querySelector('.btn-submit').textContent = 'Actualizar Familia';                  
+              }
+              
           });
 
           // ---- NUEVA LÓGICA PARA EDITAR Y ELIMINAR GÉNEROS ----
