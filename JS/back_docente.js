@@ -1,137 +1,610 @@
-            // ---- NUEVA LÓGICA PARA EDITAR Y ELIMINAR FAMILIAS ----
-            document.getElementById('table-familias').addEventListener('click', function(e) {               
-               
+// --- FAMILIAS ---
+const formFamilias = document.getElementById('form-familias');
+const tbodyFamilias = document.querySelector('#table-familias tbody');
+const inputIdFamilia = document.getElementById('id_familia_edit');
+const inputAccionFamilia = document.getElementById('accion_familia');
+const inputNombreFamilia = document.getElementById('nombre_familia');
+const btnCancelarFamilia = document.getElementById('btn-cancelar');
 
-                if (e.target.classList.contains('btn-delete')) {                
-                  e.preventDefault();
-                  if (confirm('¿Estás seguro de que quieres eliminar esta familia?')) {                                        
-                      const id = e.target.dataset.id;
-                      const form = document.createElement('form');
-                      form.method = 'POST';
-                      form.action = 'vista_docente.php';
-                      form.style.display = 'none';
+function cargarFamilias() {
+  fetch('controladores/familia.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({accion: 'listar'})
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      tbodyFamilias.innerHTML = '';
+      data.data.forEach(familia => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${familia.nFamilia}</td>
+          <td>${familia.cFamilia}</td>
+          <td>
+            <a href="#" class="btn-edit-familia" data-id="${familia.nFamilia}" data-nombre="${familia.cFamilia}">Editar</a>
+            <a href="#" class="btn-delete-familia" data-id="${familia.nFamilia}">Eliminar</a>
+          </td>
+        `;
+        tbodyFamilias.appendChild(tr);
+      });
+      agregarEventosAccionFamilia();
+    } else {
+      alert('Error al cargar familias: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error en la solicitud: ' + err));
+}
 
-                      const inputId = document.createElement('input');
-                      inputId.type = 'hidden';
-                      inputId.name = 'id_familia';
-                      inputId.value = id;
-                      form.appendChild(inputId);
+function limpiarFormularioFamilia() {
+  inputIdFamilia.value = '0';
+  inputAccionFamilia.value = 'agregar';
+  inputNombreFamilia.value = '';
+  btnCancelarFamilia.style.display = 'none';
+}
 
-                      const inputAction = document.createElement('input');
-                      inputAction.type = 'hidden';
-                      inputAction.name = 'eliminar_familia';
-                      inputAction.value = 'true';
-                      form.appendChild(inputAction);
+function agregarEventosAccionFamilia() {
+  document.querySelectorAll('.btn-edit-familia').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      inputIdFamilia.value = btn.dataset.id;
+      inputNombreFamilia.value = btn.dataset.nombre;
+      inputAccionFamilia.value = 'editar';
+      btnCancelarFamilia.style.display = 'inline-block';
+    };
+  });
 
-                      document.body.appendChild(form);
-                      form.submit();
-                  }
-              }
+  document.querySelectorAll('.btn-delete-familia').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      if(confirm('¿Seguro que quieres eliminar esta familia?')){
+        fetch('controladores/familia.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({accion: 'eliminar', nFamilia: btn.dataset.id})
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          if(data.status === 'ok'){
+            cargarFamilias();
+            limpiarFormularioFamilia();
+          }
+        })
+        .catch(err => alert('Error en la solicitud: ' + err));
+      }
+    };
+  });
+}
 
+formFamilias.addEventListener('submit', e => {
+  e.preventDefault();
+  const accion = inputAccionFamilia.value;
+  const nombre = inputNombreFamilia.value.trim();
+  const id = inputIdFamilia.value;
 
+  if(nombre === ''){
+    alert('El nombre no puede estar vacío');
+    return;
+  }
 
-              if (e.target.classList.contains('btn-edit-familia')) {
-                  e.preventDefault();                  
-                  const id = e.target.dataset.id;
-                  const nombre = e.target.dataset.nombre;
+  const datos = new URLSearchParams();
+  datos.append('accion', accion);
+  datos.append('cFamilia', nombre);
+  if(accion === 'editar'){
+    datos.append('nFamilia', id);
+  }
 
-                  
-                  
-                  document.getElementById('nombre_familia').value = nombre;
-                  document.getElementById('id_familia_edit').value = id;
+  fetch('controladores/familia.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: datos
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    if(data.status === 'ok'){
+      limpiarFormularioFamilia();
+      cargarFamilias();
+    }
+  })
+  .catch(err => alert('Error en la solicitud: ' + err));
+});
 
-                  console.log(document.getElementById('nombre_familia').value);
-                  console.log(document.getElementById('id_familia_edit').value);
+btnCancelarFamilia.onclick = () => {
+  limpiarFormularioFamilia();
+};
 
-                  
-                  const form = document.getElementById('form-familias');
-                  form.querySelector('.btn-submit').textContent = 'Actualizar Familia';                  
-              }
-              
-          });
+// --- GENEROS ---
+const formGeneros = document.getElementById('form-generos');
+const tbodyGeneros = document.querySelector('#table-generos tbody');
+const inputIdGenero = document.getElementById('id_genero_edit');
+const inputAccionGenero = document.getElementById('accion_genero');
+const inputNombreGenero = document.getElementById('nombre_genero');
+const selectFamiliaGenero = document.getElementById('familia_select_genero');
+const btnCancelarGenero = document.getElementById('btn-cancelar-genero');
 
-          // ---- NUEVA LÓGICA PARA EDITAR Y ELIMINAR GÉNEROS ----
-          document.getElementById('table-generos').addEventListener('click', function(e) {
-              if (e.target.classList.contains('btn-edit-genero')) {
-                  e.preventDefault();
-                  const id = e.target.dataset.id;
-                  const nombre = e.target.dataset.nombre;
-                  const familiaId = e.target.dataset.familiaid;
+function cargarGeneros(nFamilia = null) {
+  // Si se pasa nFamilia, lista por familia, si no, lista todo
+  const params = nFamilia 
+    ? new URLSearchParams({accion: 'listarPorFamilia', nFamilia}) 
+    : new URLSearchParams({accion: 'listar'});
 
-                  document.getElementById('familia_select_genero').value = familiaId;
-                  document.getElementById('nombre_genero').value = nombre;
-                  document.getElementById('id_genero_edit').value = id;
+  fetch('controladores/genero.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: params
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      tbodyGeneros.innerHTML = '';
+      data.data.forEach(genero => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${genero.nGenero}</td>
+          <td>${genero.cFamilia || ''}</td>
+          <td>${genero.cGenero}</td>
+          <td>
+            <a href="#" class="btn-edit-genero" 
+              data-id="${genero.nGenero}" 
+              data-nombre="${genero.cGenero}" 
+              data-familia="${genero.nFamilia}">Editar</a>
+            <a href="#" class="btn-delete-genero" data-id="${genero.nGenero}">Eliminar</a>
+          </td>
+        `;
+        tbodyGeneros.appendChild(tr);
+      });
+      agregarEventosAccionGenero();
+    } else {
+      alert('Error al cargar géneros: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error en la solicitud: ' + err));
+}
 
-                  const form = document.getElementById('form-generos');
-                  form.querySelector('.btn-submit').textContent = 'Actualizar Género';
-                  form.querySelector('.btn-submit').name = 'editar_genero';
-              }
-              if (e.target.classList.contains('btn-delete-genero')) {
-                  e.preventDefault();
-                  if (confirm('¿Estás seguro de que quieres eliminar este género?')) {
-                      const id = e.target.dataset.id;
-                      const form = document.createElement('form');
-                      form.method = 'POST';
-                      form.action = 'vista_docente.php';
-                      form.style.display = 'none';
+function limpiarFormularioGenero() {
+  inputIdGenero.value = '0';
+  inputAccionGenero.value = 'agregar';
+  inputNombreGenero.value = '';
+  selectFamiliaGenero.value = '';
+  btnCancelarGenero.style.display = 'none';
+}
 
-                      const inputId = document.createElement('input');
-                      inputId.type = 'hidden';
-                      inputId.name = 'id_genero';
-                      inputId.value = id;
-                      form.appendChild(inputId);
+function agregarEventosAccionGenero() {
+  document.querySelectorAll('.btn-edit-genero').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      inputIdGenero.value = btn.dataset.id;
+      inputNombreGenero.value = btn.dataset.nombre;
+      selectFamiliaGenero.value = btn.dataset.familia;
+      inputAccionGenero.value = 'editar';
+      btnCancelarGenero.style.display = 'inline-block';
+    };
+  });
 
-                      const inputAction = document.createElement('input');
-                      inputAction.type = 'hidden';
-                      inputAction.name = 'eliminar_genero';
-                      inputAction.value = 'true';
-                      form.appendChild(inputAction);
+  document.querySelectorAll('.btn-delete-genero').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      if(confirm('¿Seguro que quieres eliminar este género?')){
+        fetch('controladores/genero.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({accion: 'eliminar', nGenero: btn.dataset.id})
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          if(data.status === 'ok'){
+            cargarGeneros();
+            limpiarFormularioGenero();
+          }
+        })
+        .catch(err => alert('Error en la solicitud: ' + err));
+      }
+    };
+  });
+}
 
-                      document.body.appendChild(form);
-                      form.submit();
-                  }
-              }
-          });
+formGeneros.addEventListener('submit', e => {
+  e.preventDefault();
 
-          // ---- NUEVA LÓGICA PARA EDITAR Y ELIMINAR ESPECIES ----
-          document.getElementById('table-especies').addEventListener('click', function(e) {
-              if (e.target.classList.contains('btn-edit-especie')) {
-                  e.preventDefault();
-                  const id = e.target.dataset.id;
-                  const nombre = e.target.dataset.nombre;
-                  const generoId = e.target.dataset.generoid;
+  const datos = new URLSearchParams();
+  datos.append('accion', inputAccionGenero.value);
+  datos.append('cGenero', inputNombreGenero.value.trim());
+  datos.append('nFamilia', selectFamiliaGenero.value);
+  if(inputAccionGenero.value === 'editar'){
+    datos.append('nGenero', inputIdGenero.value);
+  }
 
-                  document.getElementById('genero_select_especie').value = generoId;
-                  document.getElementById('nombre_especie').value = nombre;
-                  document.getElementById('id_especie_edit').value = id;
+  fetch('controladores/genero.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: datos
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    if(data.status === 'ok'){
+      limpiarFormularioGenero();
+      cargarGeneros();
+    }
+  })
+  .catch(err => alert('Error en la solicitud: ' + err));
+});
 
-                  const form = document.getElementById('form-especies');
-                  form.querySelector('.btn-submit').textContent = 'Actualizar Especie';
-                  form.querySelector('.btn-submit').name = 'editar_especie';
-              }
-              if (e.target.classList.contains('btn-delete-especie')) {
-                  e.preventDefault();
-                  if (confirm('¿Estás seguro de que quieres eliminar esta especie?')) {
-                      const id = e.target.dataset.id;
-                      const form = document.createElement('form');
-                      form.method = 'POST';
-                      form.action = 'vista_docente.php';
-                      form.style.display = 'none';
+btnCancelarGenero.onclick = () => {
+  limpiarFormularioGenero();
+};
 
-                      const inputId = document.createElement('input');
-                      inputId.type = 'hidden';
-                      inputId.name = 'id_especie';
-                      inputId.value = id;
-                      form.appendChild(inputId);
+// --- ESPECIES ---
+const formEspecies = document.getElementById('form-especies');
+const tbodyEspecies = document.querySelector('#table-especies tbody');
+const inputIdEspecie = document.getElementById('id_especie_edit');
+const inputAccionEspecie = document.getElementById('accion_especie');
+const inputNombreEspecie = document.getElementById('nombre_especie');
+const selectFamiliaEspecie = document.getElementById('familia_select_especie');
+const selectGeneroEspecie = document.getElementById('genero_select_especie');
+const btnCancelarEspecie = document.getElementById('btn-cancelar-especie');
 
-                      const inputAction = document.createElement('input');
-                      inputAction.type = 'hidden';
-                      inputAction.name = 'eliminar_especie';
-                      inputAction.value = 'true';
-                      form.appendChild(inputAction);
+function cargarGenerosPorFamilia(familiaId, selectedGeneroId = null) {
+  if (!familiaId) {
+    selectGeneroEspecie.innerHTML = '<option value="">-- Elige un género --</option>';
+    selectGeneroEspecie.disabled = true;
+    return;
+  }
+  fetch('controladores/genero.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({accion: 'listarPorFamilia', nFamilia: familiaId})
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'ok') {
+      selectGeneroEspecie.innerHTML = '<option value="">-- Elige un género --</option>';
+      data.data.forEach(gen => {
+        const selected = selectedGeneroId == gen.nGenero ? 'selected' : '';
+        selectGeneroEspecie.insertAdjacentHTML('beforeend', `<option value="${gen.nGenero}" ${selected}>${gen.cGenero}</option>`);
+      });
+      selectGeneroEspecie.disabled = false;
+    } else {
+      alert('Error al cargar géneros: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error en la solicitud géneros: ' + err));
+}
 
-                      document.body.appendChild(form);
-                      form.submit();
-                  }
-              }
-          });
+function cargarEspecies() {
+  fetch('controladores/especie.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: new URLSearchParams({accion: 'listar'})
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      tbodyEspecies.innerHTML = '';
+      data.data.forEach(esp => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${esp.nEspecie}</td>
+          <td>${esp.cFamilia}</td>
+          <td>${esp.cGenero}</td>
+          <td>${esp.cEspecie}</td>
+          <td>
+            <a href="#" class="btn-edit-especie" data-id="${esp.nEspecie}" data-nombre="${esp.cEspecie}" data-familia="${esp.nFamilia}" data-genero="${esp.nGenero}">Editar</a>
+            <a href="#" class="btn-delete-especie" data-id="${esp.nEspecie}">Eliminar</a>
+          </td>
+        `;
+        tbodyEspecies.appendChild(tr);
+      });
+      agregarEventosAccionEspecie();
+    } else {
+      alert('Error al cargar especies: ' + data.message);
+    }
+  })
+  .catch(err => alert('Error en la solicitud especies: ' + err));
+}
+
+function limpiarFormularioEspecie() {
+  inputIdEspecie.value = '0';
+  inputAccionEspecie.value = 'agregar';
+  inputNombreEspecie.value = '';
+  selectFamiliaEspecie.value = '';
+  selectGeneroEspecie.innerHTML = '<option value="">-- Elige un género --</option>';
+  selectGeneroEspecie.disabled = true;
+  btnCancelarEspecie.style.display = 'none';
+}
+
+function agregarEventosAccionEspecie() {
+  document.querySelectorAll('.btn-edit-especie').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      inputIdEspecie.value = btn.dataset.id;
+      inputNombreEspecie.value = btn.dataset.nombre;
+      inputAccionEspecie.value = 'editar';
+      selectFamiliaEspecie.value = btn.dataset.familia;
+      cargarGenerosPorFamilia(btn.dataset.familia, btn.dataset.genero);
+      btnCancelarEspecie.style.display = 'inline-block';
+    };
+  });
+
+  document.querySelectorAll('.btn-delete-especie').forEach(btn => {
+    btn.onclick = e => {
+      e.preventDefault();
+      if(confirm('¿Seguro que quieres eliminar esta especie?')){
+        fetch('controladores/especie.php', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: new URLSearchParams({accion: 'eliminar', nEspecie: btn.dataset.id})
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          if(data.status === 'ok'){
+            cargarEspecies();
+            limpiarFormularioEspecie();
+          }
+        })
+        .catch(err => alert('Error en la solicitud: ' + err));
+      }
+    };
+  });
+}
+
+selectFamiliaEspecie.addEventListener('change', () => {
+  cargarGenerosPorFamilia(selectFamiliaEspecie.value);
+  selectGeneroEspecie.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
+  selectGeneroEspecie.disabled = true;
+});
+
+formEspecies.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const accion = inputAccionEspecie.value;
+  const nombre = inputNombreEspecie.value.trim();
+  const id = inputIdEspecie.value;
+  const familiaId = selectFamiliaEspecie.value;
+  const generoId = selectGeneroEspecie.value;
+
+  if(!familiaId){
+    alert('Seleccione una familia');
+    return;
+  }
+  if(!generoId){
+    alert('Seleccione un género');
+    return;
+  }
+  if(nombre === ''){
+    alert('El nombre de la especie no puede estar vacío');
+    return;
+  }
+
+  const datos = new URLSearchParams();
+  datos.append('accion', accion);
+  datos.append('cEspecie', nombre);
+  datos.append('nFamilia', familiaId);
+  datos.append('nGenero', generoId);
+  if(accion === 'editar'){
+    datos.append('nEspecie', id);
+  }
+
+  fetch('controladores/especie.php', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: datos
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    if(data.status === 'ok'){
+      limpiarFormularioEspecie();
+      cargarEspecies();
+    }
+  })
+  .catch(err => alert('Error en la solicitud: ' + err));
+});
+
+btnCancelarEspecie.onclick = () => {
+  limpiarFormularioEspecie();
+};
+
+// --- PRUEBAS ---
+document.addEventListener('DOMContentLoaded', () => {
+  const formulario = document.getElementById('formularioProducto');
+  const cancelButton = document.getElementById('cancelButton');
+
+  const familiaSelect = document.getElementById('familiaSelect');
+  const generoSelect = document.getElementById('generoSelect');
+  const especieSelect = document.getElementById('especieSelect');
+
+  const contenedorProductos = document.getElementById('contenedorProductos');
+
+  const accionInput = document.getElementById('accion');
+  const nPruebaInput = document.getElementById('nPrueba');
+
+  // Cargar familias al cargar página
+  function cargarFamilias() {
+    fetch('controladores/familia.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listar'})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        familiaSelect.innerHTML = '<option value="" disabled selected>Selecciona una familia</option>';
+        data.data.forEach(fam => {
+          const option = document.createElement('option');
+          option.value = fam.nFamilia;
+          option.textContent = fam.cFamilia;
+          familiaSelect.appendChild(option);
+        });
+      } else {
+        alert('Error al cargar familias: ' + data.message);
+      }
+    })
+    .catch(() => alert('Error en la solicitud para familias'));
+  }
+
+  // Al cambiar familia, cargar géneros
+  familiaSelect.addEventListener('change', () => {
+    const nFamilia = familiaSelect.value;
+    generoSelect.innerHTML = '<option value="" disabled selected>Cargando géneros...</option>';
+    generoSelect.disabled = true;
+    especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+    especieSelect.disabled = true;
+
+    if (!nFamilia) {
+      generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+      generoSelect.disabled = true;
+      return;
+    }
+
+    fetch('controladores/genero.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listarPorFamilia', nFamilia})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+        data.data.forEach(gen => {
+          const option = document.createElement('option');
+          option.value = gen.nGenero;
+          option.textContent = gen.cGenero;
+          generoSelect.appendChild(option);
+        });
+        generoSelect.disabled = false;
+      } else {
+        alert('Error al cargar géneros: ' + data.message);
+      }
+    })
+    .catch(() => alert('Error en la solicitud para géneros'));
+  });
+
+  // Al cambiar género, cargar especies
+  generoSelect.addEventListener('change', () => {
+    const nGenero = generoSelect.value;
+    
+    especieSelect.innerHTML = '<option value="" disabled selected>Cargando especies...</option>';
+    especieSelect.disabled = true;
+
+    if (!nGenero) {
+      especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+      
+      especieSelect.disabled = true;
+      return;
+    }
+
+    fetch('controladores/especie.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listarPorGenero', nGenero})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+        data.data.forEach(esp => {
+          const option = document.createElement('option');
+          option.value = esp.nEspecie;
+          option.textContent = esp.cEspecie;
+          especieSelect.appendChild(option);
+        });
+        especieSelect.disabled = false;
+      } else {
+        alert('Error al cargar especies: ' + data.message);
+      }
+    })
+    .catch(() => alert('Error en la solicitud para especies'));
+  });
+
+  // Enviar formulario (crear o editar)
+  formulario.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const formData = new FormData(formulario);
+
+    fetch('controladores/prueba.php', {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin'
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        alert(data.message || 'Prueba guardada correctamente');
+        cargarPruebas();
+        formulario.style.display = 'none';
+        cancelButton.style.display = 'none';
+        mostrarFormularioBtn.style.display = 'inline-block';
+        limpiarFormulario();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(() => alert('Error en la solicitud al guardar prueba'));
+  });
+
+  // Limpiar formulario
+  function limpiarFormulario() {
+    formulario.reset();
+    generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+    generoSelect.disabled = true;
+    especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+    especieSelect.disabled = true;
+    accionInput.value = 'agregar';
+    nPruebaInput.value = '0';
+  }
+
+  // Cargar pruebas para mostrar en cuadro
+  function cargarPruebas() {
+    fetch('controladores/prueba.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listar'})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        contenedorProductos.innerHTML = ''; // limpiar
+
+        data.data.forEach(prueba => {
+          // Crear cuadro con info
+          const div = document.createElement('div');
+          div.className = 'producto-item'; // agrega clase para estilos si quieres
+
+          div.innerHTML = `
+            <strong>Familia:</strong> ${prueba.cFamilia} <br>
+            <strong>Género:</strong> ${prueba.cGenero} <br>
+            <strong>Especie:</strong> ${prueba.cEspecie} <br>
+            <strong>Bacteria:</strong> ${prueba.cBacteria} <br>
+            <strong>Descripción:</strong> ${prueba.cDescripcion} <br>
+            <strong>Resultado:</strong> ${prueba.cResultado} <br>
+            ${prueba.cFoto ? `<img src="../uploads/${prueba.cFoto}" alt="Imagen" width="100">` : ''}
+            <br><br>
+          `;
+
+          contenedorProductos.appendChild(div);
+        });
+      } else {
+        contenedorProductos.innerHTML = 'No se encontraron pruebas.';
+      }
+    })
+    .catch(() => contenedorProductos.innerHTML = 'Error al cargar pruebas.');
+  }
+
+  // Inicializar carga al entrar
+  cargarFamilias();
+  cargarPruebas();
+});
+
+// --- INICIO ---
+document.addEventListener('DOMContentLoaded', () => {
+  cargarFamilias();
+  cargarGeneros();
+  cargarEspecies();
+  // La función cargarPruebas() se llama en el DOMContentLoaded de PRUEBAS arriba
+});
