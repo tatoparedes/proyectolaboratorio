@@ -3,7 +3,8 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once "../conexion.php";
 
-$usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 6;
+$usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 0;
+$usuarioRol = isset($_SESSION["usuario"]["nRol"]) ? intval($_SESSION["usuario"]["nRol"]) : 0; // capturamos el rol
 
 function limpiar($dato) {
     return htmlspecialchars(trim($dato), ENT_QUOTES, 'UTF-8');
@@ -11,8 +12,8 @@ function limpiar($dato) {
 
 $accion = $_POST['accion'] ?? '';
 
-if (!$usuarioId || $usuarioId <= 0) {
-    echo json_encode(["status" => "error", "message" => "Usuario no autorizado"]);
+if (!$usuarioId || $usuarioId <= 0 || $usuarioRol !== 2) {
+    echo json_encode(["status" => "error", "message" => "Usuario no autorizado o rol no permitido"]);
     exit;
 }
 

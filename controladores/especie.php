@@ -4,6 +4,7 @@ header('Content-Type: application/json; charset=utf-8');
 require_once "../conexion.php";
 
 $usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 0;
+$usuarioRol = isset($_SESSION["usuario"]["nRol"]) ? intval($_SESSION["usuario"]["nRol"]) : 0;
 
 function limpiar($dato) {
     return htmlspecialchars(trim($dato), ENT_QUOTES, 'UTF-8');
@@ -11,8 +12,9 @@ function limpiar($dato) {
 
 $accion = $_POST['accion'] ?? '';
 
-if (!$usuarioId || $usuarioId <= 0) {
-    echo json_encode(["status" => "error", "message" => "Usuario no autorizado"]);
+// Validar usuario y rol docente (rol = 2)
+if (!$usuarioId || $usuarioId <= 0 || $usuarioRol !== 2) {
+    echo json_encode(["status" => "error", "message" => "Usuario no autorizado o rol no permitido"]);
     exit;
 }
 
@@ -77,8 +79,13 @@ try {
                 exit;
             }
 
-            $stmt = $conn->prepare("UPDATE especie SET cEspecie = ?, nGenero = ?, nUsuario = ? WHERE nEspecie = ?");
-            $stmt->execute([$nombre, $generoId, $usuarioId, $id]);
+            $stmt = $conn->prepare("UPDATE especie SET cEspecie = ?, nGenero = ?, nUsuario = ? WHERE nEspecie = ? AND nUsuario = ?");
+            $stmt->execute([$nombre, $generoId, $usuarioId, $id, $usuarioId]);
+
+            if ($stmt->rowCount() === 0) {
+                echo json_encode(["status" => "error", "message" => "Especie no encontrada o sin permisos para editar"]);
+                exit;
+            }
 
             echo json_encode(["status" => "ok", "message" => "Especie actualizada correctamente"]);
             break;
@@ -91,8 +98,13 @@ try {
                 exit;
             }
 
-            $stmt = $conn->prepare("DELETE FROM especie WHERE nEspecie = ?");
-            $stmt->execute([$id]);
+            $stmt = $conn->prepare("DELETE FROM especie WHERE nEspecie = ? AND nUsuario = ?");
+            $stmt->execute([$id, $usuarioId]);            
+
+            if ($stmt->rowCount() === 0) {
+                echo json_encode(["status" => "error", "message" => "Especie no encontrada o sin permisos para eliminar"]);
+                exit;
+            }
 
             echo json_encode(["status" => "ok", "message" => "Especie eliminada correctamente"]);
             break;

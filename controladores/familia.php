@@ -3,7 +3,8 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 require_once "../conexion.php"; // Aquí debe existir $conn (PDO)
 
-$usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 6; // fallback para pruebas
+$usuarioId = isset($_SESSION["usuario"]["nUsuario"]) ? intval($_SESSION["usuario"]["nUsuario"]) : 0;
+$usuarioRol = isset($_SESSION["usuario"]["nRol"]) ? intval($_SESSION["usuario"]["nRol"]) : 0; // Capturamos el rol
 
 // Función para limpiar datos
 function limpiar($dato) {
@@ -12,8 +13,9 @@ function limpiar($dato) {
 
 $accion = $_POST['accion'] ?? '';
 
-if (!$usuarioId || $usuarioId <= 0) {
-    echo json_encode(["status" => "error", "message" => "Usuario no autorizado"]);
+// Validar usuario y rol docente
+if (!$usuarioId || $usuarioId <= 0 || $usuarioRol !== 2) {
+    echo json_encode(["status" => "error", "message" => "Usuario no autorizado o rol no permitido"]);
     exit;
 }
 

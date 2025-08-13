@@ -1,11 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);  // Asegúrate de iniciar la sesión para acceder a $_SESSION
+require_once 'conexion.php';
 
-require_once 'conexion.php';  // Aquí está tu $conn PDO
-
-// Verificamos que haya usuario logueado
 if (!isset($_SESSION["usuario"]["nUsuario"]) || !isset($_SESSION["usuario"]["nRol"])) {
     die("Acceso no autorizado: usuario no identificado.");
 }
@@ -17,12 +12,10 @@ if ($usuarioId <= 0) {
     die("Acceso no autorizado: ID de usuario inválido.");
 }
 
-// Verificamos que el rol sea docente (nRol = 2)
 if ($usuarioRol !== 2) {
     die("Acceso no autorizado: sólo usuarios con rol docente pueden acceder.");
 }
 
-// Si llega aquí, el usuario es docente y puede continuar
 $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
 ?>
 
@@ -63,7 +56,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
             </div>
         </div>
     </header>
-
     <main class="container">
         <div class="management-wrapper">
             <aside class="management-sidebar">
@@ -250,23 +242,23 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                 <input type="hidden" name="accion" id="accion" value="agregar">
 
                 <div>
-                    <label for="familiaSelect">Familia:</label>
+                    <label for="familiaSelect">Seleccionar Familia:</label>
                     <select id="familiaSelect" name="nFamilia" required>
-                    <option value="" disabled selected>Selecciona una familia</option>
+                    <option value="" disabled selected></option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="generoSelect">Género:</label>
+                    <label for="generoSelect">Seleccionar Género:</label>
                     <select id="generoSelect" name="nGenero" required disabled>
-                    <option value="" disabled selected>Selecciona un género</option>
+                    <option value="" disabled selected></option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="especieSelect">Especie:</label>
+                    <label for="especieSelect">Seleccionar Especie:</label>
                     <select id="especieSelect" name="nEspecie" required disabled>
-                    <option value="" disabled selected>Selecciona una especie</option>
+                    <option value="" disabled selected></option>
                     </select>
                 </div>
 
@@ -287,9 +279,10 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
 
                 <div style="grid-column: span 2;">
                     <label for="imagenInput">Imagen:</label>
-                    <input type="file" id="imagenInput" name="cFoto" accept="image/*">
+                    <input type="file" id="imagenInput" name="cFoto" accept="image/*" required>
+                    <img id="previewImagen" src="" style="display:none; width: 150px; margin-top: 10px;">
                 </div>
-
+                <br>
                 <button type="submit" id="saveButton">Guardar Prueba</button>
                 <button type="button" id="cancelButton" style="display:none;">Cancelar</button>
                 </form>
@@ -299,7 +292,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                 </div>
             </section>
         </div>
-
     </main>
     <script src="JS/docente.js"></script>
     <script src="JS/barradenavegacion.js"></script>

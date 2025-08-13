@@ -413,6 +413,7 @@ btnCancelarEspecie.onclick = () => {
 document.addEventListener('DOMContentLoaded', () => {
   const formulario = document.getElementById('formularioProducto');
   const cancelButton = document.getElementById('cancelButton');
+  const mostrarFormularioBtn = document.getElementById('mostrarFormularioBtn');
 
   const familiaSelect = document.getElementById('familiaSelect');
   const generoSelect = document.getElementById('generoSelect');
@@ -433,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res => res.json())
     .then(data => {
       if (data.status === 'ok') {
-        familiaSelect.innerHTML = '<option value="" disabled selected>Selecciona una familia</option>';
+        familiaSelect.innerHTML = '<option value="" disabled selected>-- Elige una familia --</option>';
         data.data.forEach(fam => {
           const option = document.createElement('option');
           option.value = fam.nFamilia;
@@ -450,13 +451,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Al cambiar familia, cargar géneros
   familiaSelect.addEventListener('change', () => {
     const nFamilia = familiaSelect.value;
-    generoSelect.innerHTML = '<option value="" disabled selected>Cargando géneros...</option>';
+    generoSelect.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
     generoSelect.disabled = true;
-    especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+    especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
     especieSelect.disabled = true;
 
     if (!nFamilia) {
-      generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+      generoSelect.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
       generoSelect.disabled = true;
       return;
     }
@@ -469,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res => res.json())
     .then(data => {
       if (data.status === 'ok') {
-        generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+        generoSelect.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
         data.data.forEach(gen => {
           const option = document.createElement('option');
           option.value = gen.nGenero;
@@ -487,13 +488,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Al cambiar género, cargar especies
   generoSelect.addEventListener('change', () => {
     const nGenero = generoSelect.value;
-    
-    especieSelect.innerHTML = '<option value="" disabled selected>Cargando especies...</option>';
+
+    especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
     especieSelect.disabled = true;
 
     if (!nGenero) {
-      especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
-      
+      especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
       especieSelect.disabled = true;
       return;
     }
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res => res.json())
     .then(data => {
       if (data.status === 'ok') {
-        especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+        especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
         data.data.forEach(esp => {
           const option = document.createElement('option');
           option.value = esp.nEspecie;
@@ -551,9 +551,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Limpiar formulario
   function limpiarFormulario() {
     formulario.reset();
-    generoSelect.innerHTML = '<option value="" disabled selected>Selecciona un género</option>';
+    generoSelect.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
     generoSelect.disabled = true;
-    especieSelect.innerHTML = '<option value="" disabled selected>Selecciona una especie</option>';
+    especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
     especieSelect.disabled = true;
     accionInput.value = 'agregar';
     nPruebaInput.value = '0';
@@ -572,32 +572,149 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedorProductos.innerHTML = ''; // limpiar
 
         data.data.forEach(prueba => {
-          // Crear cuadro con info
+          // Crear cuadro con info y botones Editar/Eliminar
           const div = document.createElement('div');
           div.className = 'producto-item'; // agrega clase para estilos si quieres
 
           div.innerHTML = `
+            ${prueba.cFoto ? `<img src="uploads/${prueba.cFoto}" alt="Imagen" style="width:200px; height:200px; object-fit:contain;">` : ''} <br>
             <strong>Familia:</strong> ${prueba.cFamilia} <br>
             <strong>Género:</strong> ${prueba.cGenero} <br>
             <strong>Especie:</strong> ${prueba.cEspecie} <br>
             <strong>Bacteria:</strong> ${prueba.cBacteria} <br>
             <strong>Descripción:</strong> ${prueba.cDescripcion} <br>
             <strong>Resultado:</strong> ${prueba.cResultado} <br>
-            ${prueba.cFoto ? `<img src="../uploads/${prueba.cFoto}" alt="Imagen" width="100">` : ''}
+            <button class="editar-btn" data-id="${prueba.nPrueba}">Editar</button>
+            <button class="eliminar-btn" data-id="${prueba.nPrueba}">Eliminar</button>
             <br><br>
           `;
 
           contenedorProductos.appendChild(div);
         });
+
+        // Agregar event listeners a botones después de crear elementos
+        document.querySelectorAll('.editar-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            editarPrueba(id);
+          });
+        });
+
+        document.querySelectorAll('.eliminar-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            if (confirm('¿Seguro que quieres eliminar esta prueba?')) {
+              eliminarPrueba(id);
+            }
+          });
+        });
+
       } else {
         contenedorProductos.innerHTML = 'No se encontraron pruebas.';
       }
     })
     .catch(() => contenedorProductos.innerHTML = 'Error al cargar pruebas.');
   }
+    // Función para cargar datos de una prueba al formulario para editar
+    function editarPrueba(id) {
+      fetch('controladores/prueba.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({accion: 'listar'})
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          const prueba = data.data.find(p => p.nPrueba == id);
+          if (!prueba) {
+            alert('Prueba no encontrada');
+            return;
+          }
+  
+          // Llenar formulario con datos de la prueba
+          familiaSelect.value = prueba.nFamilia;
+          // Disparar cambio para cargar géneros y esperar
+          familiaSelect.dispatchEvent(new Event('change'));
+  
+          // Después de un pequeño delay, seleccionar género y disparar evento para especies
+          setTimeout(() => {
+            generoSelect.value = prueba.nGenero;
+            generoSelect.dispatchEvent(new Event('change'));
+          }, 300);
+  
+          // Después otro delay, seleccionar especie
+          setTimeout(() => {
+            especieSelect.value = prueba.nEspecie;
+          }, 600);
+  
+          document.getElementById('nombrePruebaInput').value = prueba.cBacteria;
+          document.getElementById('descripcionInput').value = prueba.cDescripcion;
+          document.getElementById('resultadoInput').value = prueba.cResultado;
+          accionInput.value = 'editar';
+          nPruebaInput.value = prueba.nPrueba;
+  
+          // Mostrar formulario y ocultar botón agregar
+          formulario.style.display = 'block';
+          cancelButton.style.display = 'inline-block';
+          mostrarFormularioBtn.style.display = 'none';
+        } else {
+          alert('Error al obtener prueba para editar: ' + data.message);
+        }
+      })
+      .catch(() => alert('Error en la solicitud para editar prueba'));
+    }
+  
+    // Función para eliminar prueba
+    function eliminarPrueba(id) {
+      fetch('controladores/prueba.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({accion: 'eliminar', nPrueba: id})
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          alert(data.message || 'Prueba eliminada');
+          cargarPruebas();
+        } else {
+          alert('Error al eliminar: ' + data.message);
+        }
+      })
+      .catch(() => alert('Error en la solicitud para eliminar prueba'));
+    }
+  
+    // Mostrar formulario botón
+    mostrarFormularioBtn.addEventListener('click', () => {
+      limpiarFormulario();
+      formulario.style.display = 'block';
+      cancelButton.style.display = 'inline-block';
+      mostrarFormularioBtn.style.display = 'none';
+    });
+  
+    // Cancelar formulario
+    cancelButton.addEventListener('click', () => {
+      limpiarFormulario();
+      formulario.style.display = 'none';
+      cancelButton.style.display = 'none';
+      mostrarFormularioBtn.style.display = 'inline-block';
+    });
+  
+    // Limpiar formulario
+    function limpiarFormulario() {
+      formulario.reset();
+      generoSelect.innerHTML = '<option value="" disabled selected>-- Elige un género --</option>';
+      generoSelect.disabled = true;
+      especieSelect.innerHTML = '<option value="" disabled selected>-- Elige una especie --</option>';
+      especieSelect.disabled = true;
+      accionInput.value = 'agregar';
+      nPruebaInput.value = '0';
+      document.getElementById('previewImagen').style.display = 'none';
+    }
 
   // Inicializar carga al entrar
   cargarFamilias();
+  cargarGeneros();
+  cargarEspecies();
   cargarPruebas();
 });
 
@@ -606,5 +723,23 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarFamilias();
   cargarGeneros();
   cargarEspecies();
-  // La función cargarPruebas() se llama en el DOMContentLoaded de PRUEBAS arriba
+  cargarPruebas();
+});
+
+const imagenInput = document.getElementById('imagenInput');
+const previewImagen = document.getElementById('previewImagen');
+
+imagenInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = event => {
+      previewImagen.src = event.target.result;
+      previewImagen.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewImagen.src = '';
+    previewImagen.style.display = 'none';
+  }
 });
