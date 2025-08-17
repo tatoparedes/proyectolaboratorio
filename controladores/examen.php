@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     FROM examen e
                     LEFT JOIN pregunta p ON e.nExamen = p.nExamen
                     WHERE e.nUsuario = :usuarioId
+                        AND e.bEstado = 1
                     GROUP BY e.nExamen
                     ORDER BY e.nExamen DESC";
             $stmt = $conn->prepare($sql);
@@ -89,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } while ($stmtCheck->fetchColumn() > 0);
 
             // Insertar examen
-            $sqlExamen = "INSERT INTO examen (cExamen, cCodigoExamen, nUsuario) 
-                          VALUES (:cExamen, :cCodigoExamen, :nUsuario)";
+            $sqlExamen = "INSERT INTO examen (cExamen, cCodigoExamen, nUsuario, bEstado) 
+                          VALUES (:cExamen, :cCodigoExamen, :nUsuario, 1)";
             $stmtExamen = $conn->prepare($sqlExamen);
             $stmtExamen->bindParam(':cExamen', $cExamen);
             $stmtExamen->bindParam(':cCodigoExamen', $codigo);
@@ -189,12 +190,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             // Primero borrar preguntas asociadas
+/*
             $stmtPreg = $conn->prepare("DELETE FROM pregunta WHERE nExamen = :nExamen");
             $stmtPreg->bindParam(':nExamen', $nExamen, PDO::PARAM_INT);
             $stmtPreg->execute();
-
+*/
             // Luego borrar examen
-            $stmtExamen = $conn->prepare("DELETE FROM examen WHERE nExamen = :nExamen AND nUsuario = :usuarioId");
+            $stmtExamen = $conn->prepare("UPDATE examen SET bEstado = 0 WHERE nExamen = :nExamen AND nUsuario = :usuarioId");
             $stmtExamen->bindParam(':nExamen', $nExamen, PDO::PARAM_INT);
             $stmtExamen->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
 
