@@ -369,12 +369,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                             </table>
                         </div>
                     </div>
-                    <div id="modalPreguntas" class="modal">
-                        <div class="modal-content">
-                            <span class="close" onclick="cerrarModal()">&times;</span>
-                            <div class="modal-body"></div>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>

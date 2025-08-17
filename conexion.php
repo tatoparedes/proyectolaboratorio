@@ -1,5 +1,5 @@
 <?php
-
+/*
 $host = "localhost";
 $db = "laboratorio_db";
 $user = "root";
@@ -12,7 +12,7 @@ try {
 } catch (PDOException $e) {
     die("Conexión fallida: " . $e->getMessage());
 }
-/*
+*/
 $host = "localhost";
 $db = "iestptrujilloedu_laboratorio_db";
 $user = "iestptrujilloedu_usuario_laboratorio";
@@ -24,5 +24,5 @@ try {
     $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Conexión fallida: " . $e->getMessage());
-}*/
+}
 ?>

@@ -7,7 +7,6 @@ if (!isset($_SESSION["usuario"]["nUsuario"]) || !isset($_SESSION["usuario"]["nRo
 
 $usuarioId = intval($_SESSION["usuario"]["nUsuario"]);
 $usuarioRol = intval($_SESSION["usuario"]["nRol"]);
-
 if ($usuarioId <= 0) {
     die("Acceso no autorizado: ID de usuario inválido.");
 }
