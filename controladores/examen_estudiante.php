@@ -32,6 +32,21 @@ try {
         $examen = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($examen) {
+            // Verificar si el estudiante ya rindió el examen
+            $usuarioId = $_SESSION["usuario"]["nUsuario"] ?? 0;
+            $sqlCheck = "SELECT COUNT(*) FROM calificacion WHERE nExamen = :nExamen AND nUsuario = :nUsuario";
+            $stmtCheck = $conn->prepare($sqlCheck);
+            $stmtCheck->bindParam(':nExamen', $examen['nExamen'], PDO::PARAM_INT);
+            $stmtCheck->bindParam(':nUsuario', $usuarioId, PDO::PARAM_INT);
+            $stmtCheck->execute();
+            $yaRindo = $stmtCheck->fetchColumn();
+
+            if ($yaRindo) {
+                echo json_encode(['status' => 'error', 'message' => 'Ya completaste este examen. No puedes volver a ingresarlo.']);
+                exit;
+            }
+
+            // Examen válido y aún no rendido
             echo json_encode(['status' => 'ok', 'data' => $examen]);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Código inválido o examen no encontrado.']);
