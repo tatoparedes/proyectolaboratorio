@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $apellido_materno = $_POST["apellido_materno"];
     $correo = $_POST["correo"];
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $rol = $_POST["rol"];
+    $rol = 1;
 
     if (preg_match("/^[0-9]{8}$/", $dni)) {
         try {
@@ -101,14 +101,6 @@ if (isset($_GET['dni'])) {
     <div class="form-section">
         <h2>Regístrate</h2>
         <form method="POST" action="registro.php">
-            <div class="input-group">
-                <select name="rol" required>
-                    <option value="" disabled selected>Selecciona tu Rol</option>
-                    <option value="1">Alumno</option>
-                    <option value="2">Docente</option>
-                </select>
-                <i class="fas fa-caret-down"></i>
-            </div>
             <div class="input-group">
                 <input type="text" name="dni" placeholder="DNI (8 dígitos)" pattern="\d{8}" required>
                 <i class="fas fa-id-card"></i>

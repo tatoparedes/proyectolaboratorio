@@ -21,9 +21,9 @@ function cargarFamilias() {
         tr.innerHTML = `
           <td>${familia.nFamilia}</td>
           <td>${familia.cFamilia}</td>
-          <td>
-            <a href="#" class="btn-edit-familia" data-id="${familia.nFamilia}" data-nombre="${familia.cFamilia}">Editar</a>
-            <a href="#" class="btn-delete-familia" data-id="${familia.nFamilia}">Eliminar</a>
+          <td class="table-actions">
+            <a href="#" class="btn-action" data-id="${familia.nFamilia}" data-nombre="${familia.cFamilia}">Editar</a>
+            <a href="#" class="btn-delete" data-id="${familia.nFamilia}">Eliminar</a>
           </td>
         `;
         tbodyFamilias.appendChild(tr);
@@ -44,17 +44,20 @@ function limpiarFormularioFamilia() {
 }
 
 function agregarEventosAccionFamilia() {
-  document.querySelectorAll('.btn-edit-familia').forEach(btn => {
+  document.querySelectorAll('.btn-action').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
-      inputIdFamilia.value = btn.dataset.id;
-      inputNombreFamilia.value = btn.dataset.nombre;
-      inputAccionFamilia.value = 'editar';
-      btnCancelarFamilia.style.display = 'inline-block';
+      // Solo si el botón tiene un nombre para editar (botón de editar)
+      if (btn.dataset.nombre) {
+        inputIdFamilia.value = btn.dataset.id;
+        inputNombreFamilia.value = btn.dataset.nombre;
+        inputAccionFamilia.value = 'editar';
+        btnCancelarFamilia.style.display = 'inline-block';
+      }
     };
   });
 
-  document.querySelectorAll('.btn-delete-familia').forEach(btn => {
+  document.querySelectorAll('.btn-delete').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
       if(confirm('¿Seguro que quieres eliminar esta familia?')){
@@ -125,7 +128,6 @@ const selectFamiliaGenero = document.getElementById('familia_select_genero');
 const btnCancelarGenero = document.getElementById('btn-cancelar-genero');
 
 function cargarGeneros(nFamilia = null) {
-  // Si se pasa nFamilia, lista por familia, si no, lista todo
   const params = nFamilia 
     ? new URLSearchParams({accion: 'listarPorFamilia', nFamilia}) 
     : new URLSearchParams({accion: 'listar'});
@@ -145,12 +147,12 @@ function cargarGeneros(nFamilia = null) {
           <td>${genero.nGenero}</td>
           <td>${genero.cFamilia || ''}</td>
           <td>${genero.cGenero}</td>
-          <td>
-            <a href="#" class="btn-edit-genero" 
+          <td class="table-actions">
+            <a href="#" class="btn-action" 
               data-id="${genero.nGenero}" 
               data-nombre="${genero.cGenero}" 
               data-familia="${genero.nFamilia}">Editar</a>
-            <a href="#" class="btn-delete-genero" data-id="${genero.nGenero}">Eliminar</a>
+            <a href="#" class="btn-delete" data-id="${genero.nGenero}">Eliminar</a>
           </td>
         `;
         tbodyGeneros.appendChild(tr);
@@ -172,18 +174,21 @@ function limpiarFormularioGenero() {
 }
 
 function agregarEventosAccionGenero() {
-  document.querySelectorAll('.btn-edit-genero').forEach(btn => {
+  document.querySelectorAll('.btn-action').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
-      inputIdGenero.value = btn.dataset.id;
-      inputNombreGenero.value = btn.dataset.nombre;
-      selectFamiliaGenero.value = btn.dataset.familia;
-      inputAccionGenero.value = 'editar';
-      btnCancelarGenero.style.display = 'inline-block';
+      // Solo si el botón tiene un nombre para editar (botón de editar)
+      if (btn.dataset.nombre) {
+        inputIdGenero.value = btn.dataset.id;
+        inputNombreGenero.value = btn.dataset.nombre;
+        selectFamiliaGenero.value = btn.dataset.familia;
+        inputAccionGenero.value = 'editar';
+        btnCancelarGenero.style.display = 'inline-block';
+      }
     };
   });
 
-  document.querySelectorAll('.btn-delete-genero').forEach(btn => {
+  document.querySelectorAll('.btn-delete').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
       if(confirm('¿Seguro que quieres eliminar este género?')){
@@ -291,9 +296,9 @@ function cargarEspecies() {
           <td>${esp.cFamilia}</td>
           <td>${esp.cGenero}</td>
           <td>${esp.cEspecie}</td>
-          <td>
-            <a href="#" class="btn-edit-especie" data-id="${esp.nEspecie}" data-nombre="${esp.cEspecie}" data-familia="${esp.nFamilia}" data-genero="${esp.nGenero}">Editar</a>
-            <a href="#" class="btn-delete-especie" data-id="${esp.nEspecie}">Eliminar</a>
+          <td class="table-actions">
+            <a href="#" class="btn-action" data-id="${esp.nEspecie}" data-nombre="${esp.cEspecie}" data-familia="${esp.nFamilia}" data-genero="${esp.nGenero}">Editar</a>
+            <a href="#" class="btn-delete" data-id="${esp.nEspecie}">Eliminar</a>
           </td>
         `;
         tbodyEspecies.appendChild(tr);
@@ -317,19 +322,22 @@ function limpiarFormularioEspecie() {
 }
 
 function agregarEventosAccionEspecie() {
-  document.querySelectorAll('.btn-edit-especie').forEach(btn => {
+  document.querySelectorAll('.btn-action').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
-      inputIdEspecie.value = btn.dataset.id;
-      inputNombreEspecie.value = btn.dataset.nombre;
-      inputAccionEspecie.value = 'editar';
-      selectFamiliaEspecie.value = btn.dataset.familia;
-      cargarGenerosPorFamilia(btn.dataset.familia, btn.dataset.genero);
-      btnCancelarEspecie.style.display = 'inline-block';
+      // Solo si el botón tiene un nombre para editar (botón de editar)
+      if (btn.dataset.nombre) {
+        inputIdEspecie.value = btn.dataset.id;
+        inputNombreEspecie.value = btn.dataset.nombre;
+        inputAccionEspecie.value = 'editar';
+        selectFamiliaEspecie.value = btn.dataset.familia;
+        cargarGenerosPorFamilia(btn.dataset.familia, btn.dataset.genero);
+        btnCancelarEspecie.style.display = 'inline-block';
+      }
     };
   });
 
-  document.querySelectorAll('.btn-delete-especie').forEach(btn => {
+  document.querySelectorAll('.btn-delete').forEach(btn => {
     btn.onclick = e => {
       e.preventDefault();
       if(confirm('¿Seguro que quieres eliminar esta especie?')){
@@ -574,33 +582,36 @@ document.addEventListener('DOMContentLoaded', () => {
         data.data.forEach(prueba => {
           // Crear cuadro con info y botones Editar/Eliminar
           const div = document.createElement('div');
-          div.className = 'producto-item'; // agrega clase para estilos si quieres
+          div.className = 'producto'; 
 
           div.innerHTML = `
-            ${prueba.cFoto ? `<img src="uploads/${prueba.cFoto}" alt="Imagen" style="width:200px; height:200px; object-fit:contain;">` : ''} <br>
-            <strong>Familia:</strong> ${prueba.cFamilia} <br>
-            <strong>Género:</strong> ${prueba.cGenero} <br>
-            <strong>Especie:</strong> ${prueba.cEspecie} <br>
-            <strong>Bacteria:</strong> ${prueba.cBacteria} <br>
-            <strong>Descripción:</strong> ${prueba.cDescripcion} <br>
-            <strong>Resultado:</strong> ${prueba.cResultado} <br>
-            <button class="editar-btn" data-id="${prueba.nPrueba}">Editar</button>
-            <button class="eliminar-btn" data-id="${prueba.nPrueba}">Eliminar</button>
-            <br><br>
+            ${prueba.cFoto ? `<img src="uploads/${prueba.cFoto}" alt="Imagen de la bacteria">` : ''} 
+            <div class="producto-title">${prueba.cBacteria}</div>
+            <div class="producto-subtitle">Familia: ${prueba.cFamilia}</div>
+            <div class="producto-info">
+              <strong>Género:</strong> ${prueba.cGenero} <br>
+              <strong>Especie:</strong> ${prueba.cEspecie} <br>
+              <strong>Descripción:</strong> ${prueba.cDescripcion} <br>
+              <strong>Resultado:</strong> ${prueba.cResultado}
+            </div>
+            <div class="card-buttons">
+              <button class="btn-edit-card" data-id="${prueba.nPrueba}">Editar</button>
+              <button class="btn-delete-card" data-id="${prueba.nPrueba}">Eliminar</button>
+            </div>
           `;
 
           contenedorProductos.appendChild(div);
         });
 
         // Agregar event listeners a botones después de crear elementos
-        document.querySelectorAll('.editar-btn').forEach(btn => {
+        document.querySelectorAll('.btn-edit-card').forEach(btn => {
           btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
             editarPrueba(id);
           });
         });
 
-        document.querySelectorAll('.eliminar-btn').forEach(btn => {
+        document.querySelectorAll('.btn-delete-card').forEach(btn => {
           btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
             if (confirm('¿Seguro que quieres eliminar esta prueba?')) {
@@ -716,6 +727,133 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarGeneros();
   cargarEspecies();
   cargarPruebas();
+});
+
+
+// --- CARGA DE DATOS PARA CREAR PREGUNTAS DEL EXAMEN ---
+document.addEventListener('DOMContentLoaded', () => {
+  const familiaSelectExamen = document.getElementById('familia');
+  const generoSelectExamen = document.getElementById('genero');
+  const especieSelectExamen = document.getElementById('especie');
+  const pruebaSelectExamen = document.getElementById('pruebaSelect');
+  const previewExamen = document.getElementById('preview');
+
+  // Cargar familias
+  function cargarFamiliasExamen() {
+    fetch('controladores/familia.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listar'})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        familiaSelectExamen.innerHTML = '<option value="">-- Seleccione familia --</option>';
+        data.data.forEach(fam => {
+          familiaSelectExamen.insertAdjacentHTML('beforeend',
+            `<option value="${fam.nFamilia}">${fam.cFamilia}</option>`);
+        });
+      }
+    });
+  }
+
+  // Cargar géneros según familia
+  familiaSelectExamen.addEventListener('change', () => {
+    const nFamilia = familiaSelectExamen.value;
+    generoSelectExamen.innerHTML = '<option value="">-- Seleccione género --</option>';
+    generoSelectExamen.disabled = true;
+    especieSelectExamen.innerHTML = '<option value="">-- Seleccione especie --</option>';
+    especieSelectExamen.disabled = true;
+    pruebaSelectExamen.innerHTML = '<option value="">-- Seleccione prueba --</option>';
+    pruebaSelectExamen.disabled = true;
+    previewExamen.style.display = 'none';
+
+    if (!nFamilia) return;
+
+    fetch('controladores/genero.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listarPorFamilia', nFamilia})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        data.data.forEach(gen => {
+          generoSelectExamen.insertAdjacentHTML('beforeend',
+            `<option value="${gen.nGenero}">${gen.cGenero}</option>`);
+        });
+        generoSelectExamen.disabled = false;
+      }
+    });
+  });
+
+  // Cargar especies según género
+  generoSelectExamen.addEventListener('change', () => {
+    const nGenero = generoSelectExamen.value;
+    especieSelectExamen.innerHTML = '<option value="">-- Seleccione especie --</option>';
+    especieSelectExamen.disabled = true;
+    pruebaSelectExamen.innerHTML = '<option value="">-- Seleccione prueba --</option>';
+    pruebaSelectExamen.disabled = true;
+    previewExamen.style.display = 'none';
+
+    if (!nGenero) return;
+
+    fetch('controladores/especie.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listarPorGenero', nGenero})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        data.data.forEach(esp => {
+          especieSelectExamen.insertAdjacentHTML('beforeend',
+            `<option value="${esp.nEspecie}">${esp.cEspecie}</option>`);
+        });
+        especieSelectExamen.disabled = false;
+      }
+    });
+  });
+
+  // Cargar pruebas según especie
+  especieSelectExamen.addEventListener('change', () => {
+    const nEspecie = especieSelectExamen.value;
+    pruebaSelectExamen.innerHTML = '<option value="">-- Seleccione prueba --</option>';
+    pruebaSelectExamen.disabled = true;
+    previewExamen.style.display = 'none';
+
+    if (!nEspecie) return;
+
+    fetch('controladores/prueba.php', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({accion: 'listarPorEspecie', nEspecie})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'ok') {
+        data.data.forEach(pru => {
+          pruebaSelectExamen.insertAdjacentHTML('beforeend',
+            `<option value="${pru.nPrueba}" data-foto="${pru.cFoto}">${pru.cBacteria}</option>`);
+        });
+        pruebaSelectExamen.disabled = false;
+      }
+    });
+  });
+
+  // Mostrar preview de la prueba seleccionada
+  pruebaSelectExamen.addEventListener('change', () => {
+    const foto = pruebaSelectExamen.options[pruebaSelectExamen.selectedIndex].dataset.foto;
+    if (foto) {
+      previewExamen.src = 'uploads/' + foto;
+      previewExamen.style.display = 'block';
+    } else {
+      previewExamen.style.display = 'none';
+    }
+  });
+
+  // Inicializar
+  cargarFamiliasExamen();
 });
 
 // --- INICIO ---

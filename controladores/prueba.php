@@ -26,10 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $sql = "SELECT p.nPrueba, p.cFoto, p.cDescripcion, p.cResultado, p.cBacteria, 
                            e.nEspecie, e.cEspecie, g.nGenero, g.cGenero, f.nFamilia, f.cFamilia
-                    FROM Prueba p
-                    JOIN Especie e ON p.nEspecie = e.nEspecie
-                    JOIN Genero g ON e.nGenero = g.nGenero
-                    JOIN Familia f ON g.nFamilia = f.nFamilia
+                    FROM prueba p
+                    JOIN especie e ON p.nEspecie = e.nEspecie
+                    JOIN genero g ON e.nGenero = g.nGenero
+                    JOIN familia f ON g.nFamilia = f.nFamilia
                     WHERE p.nUsuario = :usuarioId
                     ORDER BY p.nPrueba DESC";
             $stmt = $conn->prepare($sql);
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            $sql = "INSERT INTO Prueba (nEspecie, cFoto, cDescripcion, cResultado, cBacteria, nUsuario) 
+            $sql = "INSERT INTO prueba (nEspecie, cFoto, cDescripcion, cResultado, cBacteria, nUsuario) 
                     VALUES (:nEspecie, :cFoto, :cDescripcion, :cResultado, :cBacteria, :nUsuario)";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':nEspecie', $nEspecie, PDO::PARAM_INT);
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Obtener foto actual para borrar si reemplaza
-        $sqlSelect = "SELECT cFoto FROM Prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
+        $sqlSelect = "SELECT cFoto FROM prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
         $stmtSelect = $conn->prepare($sqlSelect);
         $stmtSelect->bindParam(':nPrueba', $nPrueba, PDO::PARAM_INT);
         $stmtSelect->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            $sqlUpdate = "UPDATE Prueba SET nEspecie = :nEspecie, cFoto = :cFoto, cDescripcion = :cDescripcion, cResultado = :cResultado, cBacteria = :cBacteria
+            $sqlUpdate = "UPDATE prueba SET nEspecie = :nEspecie, cFoto = :cFoto, cDescripcion = :cDescripcion, cResultado = :cResultado, cBacteria = :cBacteria
                           WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
             $stmtUpdate = $conn->prepare($sqlUpdate);
             $stmtUpdate->bindParam(':nEspecie', $nEspecie, PDO::PARAM_INT);
@@ -178,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $sqlSelect = "SELECT cFoto FROM Prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
+        $sqlSelect = "SELECT cFoto FROM prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
         $stmtSelect = $conn->prepare($sqlSelect);
         $stmtSelect->bindParam(':nPrueba', $nPrueba, PDO::PARAM_INT);
         $stmtSelect->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            $sqlDelete = "DELETE FROM Prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
+            $sqlDelete = "DELETE FROM prueba WHERE nPrueba = :nPrueba AND nUsuario = :usuarioId";
             $stmtDelete = $conn->prepare($sqlDelete);
             $stmtDelete->bindParam(':nPrueba', $nPrueba, PDO::PARAM_INT);
             $stmtDelete->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);

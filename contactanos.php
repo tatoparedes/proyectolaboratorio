@@ -22,8 +22,8 @@ $usuarioNombre = isset($_SESSION["usuario"]["cNombres"]) ? $_SESSION["usuario"][
                 <ul class="nav-list">
                     <li class="nav-item"><a href="index.php" class="nav-link">Inicio</a></li>
                     <li class="nav-item"><a href="muestras.php" class="nav-link">Muestras</a></li>
-                    <li class="nav-item"><a href="blog.php" class="nav-link active">Blog</a></li>
-                    <li class="nav-item"><a href="contactanos.php" class="nav-link">Contáctanos</a></li>
+                    <li class="nav-item"><a href="blog.php" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="contactanos.php" class="nav-link active">Contáctanos</a></li>
                 </ul>
                 <?php if ($usuarioNombre): ?>
                     <span class="bienvenida">Bienvenido, <?php echo htmlspecialchars($usuarioNombre); ?></span>
