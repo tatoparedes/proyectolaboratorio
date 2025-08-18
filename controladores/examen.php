@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            // Generar código de 6 dígitos único
+            // Generar código único
             do {
                 $codigo = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
                 $stmtCheck = $conn->prepare("SELECT COUNT(*) FROM examen WHERE cCodigoExamen = ?");
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtExamen->execute();
             $nExamen = $conn->lastInsertId();
 
-            // Insertar preguntas asociadas
+            // Insertar preguntas
             $sqlPregunta = "INSERT INTO pregunta (cPregunta, nPrueba, nExamen) 
                             VALUES (:cPregunta, :nPrueba, :nExamen)";
             $stmtPregunta = $conn->prepare($sqlPregunta);
@@ -189,13 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            // Primero borrar preguntas asociadas
-/*
-            $stmtPreg = $conn->prepare("DELETE FROM pregunta WHERE nExamen = :nExamen");
-            $stmtPreg->bindParam(':nExamen', $nExamen, PDO::PARAM_INT);
-            $stmtPreg->execute();
-*/
-            // Luego borrar examen
             $stmtExamen = $conn->prepare("UPDATE examen SET bEstado = 0 WHERE nExamen = :nExamen AND nUsuario = :usuarioId");
             $stmtExamen->bindParam(':nExamen', $nExamen, PDO::PARAM_INT);
             $stmtExamen->bindParam(':usuarioId', $usuarioId, PDO::PARAM_INT);
@@ -210,6 +203,124 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
+
+// BUSCAR RESULTADOS POR CÓDIGO
+if ($accion === 'buscarResultados') {
+    $codigo = trim($_POST['codigoExamen'] ?? '');
+    if ($codigo === '') {
+        echo json_encode(['status' => 'error', 'message' => 'Código inválido.']); exit;
+    }
+
+    try {
+        // Buscar examen
+        $sqlExamen = "SELECT nExamen, cExamen FROM examen WHERE cCodigoExamen = :codigo LIMIT 1";
+        $stmt = $conn->prepare($sqlExamen);
+        $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+        $stmt->execute();
+        $examen = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$examen) {
+            echo json_encode(['status' => 'error', 'message' => 'Examen no encontrado.']); exit;
+        }
+
+        // Traer estudiantes con calificación en este examen
+        $sqlRes = "SELECT 
+                    c.nCalificacion, 
+                    c.cCalificacion, 
+                    u.cNombres, 
+                    u.cApePaterno, 
+                    u.cApeMaterno
+                FROM calificacion c
+                INNER JOIN usuario u ON c.nUsuario = u.nUsuario
+                WHERE c.nExamen = :nExamen
+                ORDER BY u.cApePaterno ASC, u.cApeMaterno ASC, u.cNombres ASC";
+        $stmtRes = $conn->prepare($sqlRes);
+        $stmtRes->bindParam(':nExamen', $examen['nExamen'], PDO::PARAM_INT);
+        $stmtRes->execute();
+        $resultados = $stmtRes->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['status' => 'ok', 'examen' => $examen, 'resultados' => $resultados]);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// VER RESPUESTAS
+if ($accion === 'verRespuestas') {
+    $nCalificacion = intval($_POST['nCalificacion'] ?? 0);
+    if (!$nCalificacion) { 
+        echo json_encode(['status' => 'error', 'message' => 'ID inválido.']); 
+        exit; 
+    }
+
+    try {
+        // Traer respuestas con ID y comentario
+        $sql = "SELECT r.nRespuesta, p.cPregunta, r.cRespuesta, r.cComentario
+                FROM respuesta r
+                INNER JOIN pregunta p ON r.nPregunta = p.nPregunta
+                WHERE r.nCalificacion = :nCalificacion
+                ORDER BY r.nPregunta ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nCalificacion', $nCalificacion, PDO::PARAM_INT);
+        $stmt->execute();
+        $respuestas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['status' => 'ok', 'respuestas' => $respuestas]);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error al obtener respuestas: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+
+// GUARDAR CALIFICACIÓN
+if ($accion === 'guardarCalificacion') {
+    $nCalificacion = intval($_POST['nCalificacion'] ?? 0);
+    $nota = trim($_POST['calificacion'] ?? '');
+    if (!$nCalificacion || $nota === '') { echo json_encode(['status' => 'error', 'message' => 'Datos inválidos.']); exit; }
+
+    try {
+        $sql = "UPDATE calificacion SET cCalificacion = :nota WHERE nCalificacion = :nCalificacion";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nota', $nota, PDO::PARAM_STR);
+        $stmt->bindParam(':nCalificacion', $nCalificacion, PDO::PARAM_INT);
+        $stmt->execute();
+
+        echo json_encode(['status' => 'ok', 'message' => 'Calificación guardada.']);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error en operación: ' . $e->getMessage()]);
+    }
+    exit;
+}
+// GUARDAR COMENTARIOS
+if ($accion === 'guardarComentarios') {
+    $comentarios = json_decode($_POST['comentarios'] ?? '[]', true);
+
+    if (empty($comentarios)) {
+        echo json_encode(['status' => 'error', 'message' => 'No se recibieron comentarios.']);
+        exit;
+    }
+
+    try {
+        $sql = "UPDATE respuesta SET cComentario = :comentario WHERE nRespuesta = :nRespuesta";
+        $stmt = $conn->prepare($sql);
+
+        foreach ($comentarios as $c) {
+            $stmt->bindParam(':comentario', $c['comentario'], PDO::PARAM_STR);
+            $stmt->bindParam(':nRespuesta', $c['nRespuesta'], PDO::PARAM_INT);
+            $stmt->execute();
+        }
+
+        echo json_encode(['status' => 'ok', 'message' => 'Comentarios guardados correctamente.']);
+    } catch (Exception $e) {
+        echo json_encode(['status' => 'error', 'message' => 'Error al guardar comentarios: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+    // ================= OTRAS ACCIONES (listar, agregar, etc.) =================
+    // (mantén tu código original aquí si lo necesitas, yo solo ajusté buscarResultados y verRespuestas)
 
     echo json_encode(['status' => 'error', 'message' => 'Acción no reconocida.']);
     exit;

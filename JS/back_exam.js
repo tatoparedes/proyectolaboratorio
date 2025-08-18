@@ -262,5 +262,190 @@ async function eliminarExamen(nExamen) {
     }
 }
 
-// --- Cargar exámenes al inicio ---
-document.addEventListener("DOMContentLoaded", listarExamenes);
+const formBuscar = document.getElementById("form-buscar-examen");
+const tablaResultados = document.querySelector("#table-resultados-examen tbody");
+const nombreExamenSpan = document.getElementById("nombre-examen-resultado");
+
+formBuscar.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const codigo = document.getElementById("codigoExamen").value.trim();
+    if (!codigo) return alert("Ingrese un código de examen.");
+
+    try {
+        const res = await fetch("controladores/examen.php", {
+            method: "POST",
+            body: new URLSearchParams({ accion: "buscarResultados", codigoExamen: codigo })
+        });
+        const data = await res.json();
+
+        if (data.status === "ok") {
+            nombreExamenSpan.textContent = data.examen.cExamen;
+            tablaResultados.innerHTML = "";
+
+            if (data.resultados.length === 0) {
+                tablaResultados.innerHTML = `<tr><td colspan="4">Ningún estudiante ha resuelto este examen aún.</td></tr>`;
+                return;
+            }
+
+            data.resultados.forEach((item, index) => {
+                const nombreCompleto = `${item.cNombres} ${item.cApePaterno} ${item.cApeMaterno}`;
+                const tr = document.createElement("tr");
+                tr.dataset.nombre = nombreCompleto; // Guardamos el nombre completo en el tr
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.cApePaterno} ${item.cApeMaterno} ${item.cNombres}</td>
+                    <td>
+                        <input type="number" step="0.01" min="0" max="20"
+                            value="${item.cCalificacion ?? ''}" 
+                            data-id="${item.nCalificacion}" class="input-nota"/>
+                        <button class="btn-guardar-nota" data-id="${item.nCalificacion}">💾</button>
+                    </td>
+                    <td>
+                        <button class="btn-ver-respuestas" data-id="${item.nCalificacion}"
+                                data-nombre="${item.cApePaterno} ${item.cApeMaterno} ${item.cNombres}">
+                        Ver respuestas
+                        </button>
+                    </td>
+                `;
+                tablaResultados.appendChild(tr);
+            });
+        } else {
+            alert(data.message);
+            nombreExamenSpan.textContent = "";
+            tablaResultados.innerHTML = "";
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error en la búsqueda.");
+    }
+});
+
+// Evento de botones en la tabla
+tablaResultados.addEventListener("click", async (e) => {
+    const id = e.target.dataset.id;
+    if (!id) return;
+
+    // Ver respuestas (modal)
+    if (e.target.classList.contains("btn-ver-respuestas")) {
+        const nCalificacion = e.target.dataset.id;
+        const nombreAlumno = e.target.dataset.nombre;
+
+        try {
+            const res = await fetch("controladores/examen.php", {
+                method: "POST",
+                body: new URLSearchParams({ accion: "verRespuestas", nCalificacion })
+            });
+            const data = await res.json();
+
+            if (data.status === "ok") {
+                const modal = document.createElement("div");
+                Object.assign(modal.style, {
+                    position: "fixed",
+                    top: 0, left: 0, width: "100%", height: "100%",
+                    background: "rgba(0,0,0,0.6)",
+                    display: "flex", justifyContent: "center", alignItems: "center",
+                    zIndex: 9999
+                });
+
+                const content = document.createElement("div");
+                Object.assign(content.style, {
+                    background: "#fff",
+                    padding: "20px",
+                    width: "90%",
+                    maxWidth: "600px",
+                    maxHeight: "80%",
+                    overflowY: "auto",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 25px rgba(0,0,0,0.3)",
+                    position: "relative",
+                    fontFamily: "Arial, sans-serif"
+                });
+
+                const closeBtn = document.createElement("span");
+                closeBtn.innerHTML = "&times;";
+                Object.assign(closeBtn.style, {
+                    position: "absolute", top: "10px", right: "15px",
+                    fontSize: "1.5rem", fontWeight: "bold", color: "#888", cursor: "pointer"
+                });
+                closeBtn.addEventListener("click", () => modal.remove());
+
+                // Contenido con comentarios editables
+                let html = `<h4 style="margin-top:0;margin-bottom:15px;">Respuestas de: ${nombreAlumno}</h4>
+                <ul style="list-style:none;padding:0;margin:0;">`;
+
+                data.respuestas.forEach((r, i) => {
+                    html += `<li style="padding:8px 10px; border-bottom:1px solid #eee;">
+                                <strong style="color:#555;">${i+1}. ${r.cPregunta}</strong><br>
+                                Respuesta: ${r.cRespuesta}<br>
+                                Comentario docente: <span style="color:${(r.cComentario || '').toLowerCase().includes('correcta') ? 'green':'red'};">
+                                    ${r.cComentario ?? 'Sin revisión'}
+                                </span><br>
+                                Añadir comentario:<br>
+                                <textarea data-idres="${r.nRespuesta}" rows="2" style="width:100%;margin-top:5px;" placeholder="Escribe un comentario...">${r.cComentario ?? ''}</textarea>
+                            </li>`;
+                });
+
+                html += `</ul>
+                        <button id="guardarComentarios" style="margin-top:10px;padding:6px 12px;">Guardar comentarios</button>`;
+
+                content.innerHTML = html;
+                content.appendChild(closeBtn);
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+
+                modal.addEventListener("click", (event) => { if (event.target === modal) modal.remove(); });
+
+                // Guardar comentarios
+                content.querySelector("#guardarComentarios").addEventListener("click", async () => {
+                    const comentarios = Array.from(content.querySelectorAll("textarea")).map(t => ({
+                        nRespuesta: t.dataset.idres,
+                        comentario: t.value.trim()
+                    }));
+
+                    try {
+                        const resGuardar = await fetch("controladores/examen.php", {
+                            method: "POST",
+                            body: new URLSearchParams({ accion: "guardarComentarios", comentarios: JSON.stringify(comentarios) })
+                        });
+                        const dataGuardar = await resGuardar.json();
+                        if (dataGuardar.status === "ok") {
+                            alert("Comentarios guardados correctamente.");
+                            modal.remove();
+                        } else {
+                            alert(dataGuardar.message);
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error al guardar comentarios.");
+                    }
+                });
+
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error al obtener respuestas.");
+        }
+    }
+
+    // Guardar calificación
+    if (e.target.classList.contains("btn-guardar-nota")) {
+        const input = document.querySelector(`.input-nota[data-id="${id}"]`);
+        const nota = input.value.trim();
+        if (!nota) return alert("Ingrese una nota válida.");
+
+        try {
+            const res = await fetch("controladores/examen.php", {
+                method: "POST",
+                body: new URLSearchParams({ accion: "guardarCalificacion", nCalificacion: id, calificacion: nota })
+            });
+            const data = await res.json();
+            if (data.status === "ok") alert("Calificación guardada correctamente.");
+            else alert(data.message);
+        } catch (err) {
+            console.error(err);
+            alert("Error al guardar calificación.");
+        }
+    }
+});

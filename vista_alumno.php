@@ -72,6 +72,12 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Estudiante";
                             <span>Exámenes</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#panel-resultado-examen" class="sidebar-btn">
+                            <img src="https://api.iconify.design/material-symbols/grade-outline.svg?color=currentColor" class="sidebar-icon" alt="Resultado Examen">
+                            <span>Resultado Examen</span>
+                        </a>
+                    </li>
                 </ul>
             </aside>
 
@@ -106,10 +112,30 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Estudiante";
                         </div>
                     </div>
                 </div>
+                <div id="panel-resultado-examen" class="content-panel">
+                    <h3>Resultados de tu Examen</h3>
+                    <div class="card">
+                        <div id="contenedor-formulario-revision">
+                            <p>Ingresa el código de tu examen para ver tus resultados y la corrección.</p>
+                            <form id="form-acceso-revision">
+                                <div class="form-group">
+                                    <label for="codigoExamenRevision">Código del Examen:</label>
+                                    <input type="text" id="codigoExamenRevision" name="codigoExamenRevision" required placeholder="Ej: 123">
+                                </div>
+                                <button type="submit" class="btn-primary">Ver Resultados</button>
+                            </form>
+                        </div>
+                        <div id="contenedor-resultados" style="display:none;">
+                            <div id="resumen-nota"></div>
+                            <div id="contenedor-respuestas-revisadas"></div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
     <script src="JS/barradenavegacion.js"></script>
     <script src="JS/back_estudiante.js"></script>
+    <script src="JS/back_revision.js"></script>
 </body>
 </html>

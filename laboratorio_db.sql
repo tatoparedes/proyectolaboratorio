@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-08-2025 a las 06:39:21
+-- Tiempo de generación: 18-08-2025 a las 04:38:43
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -83,12 +83,15 @@ CREATE TABLE `calificacion` (
 
 INSERT INTO `calificacion` (`nCalificacion`, `cCalificacion`, `nExamen`, `nUsuario`, `fechaRegistro`) VALUES
 (1, NULL, 1, 3, '2025-08-16 19:33:06'),
-(2, NULL, 3, 3, '2025-08-16 19:38:30'),
-(3, NULL, 4, 3, '2025-08-16 19:51:20'),
+(2, 10.60, 3, 3, '2025-08-16 19:38:30'),
+(3, 19.00, 4, 3, '2025-08-16 19:51:20'),
 (4, NULL, 6, 3, '2025-08-16 20:10:20'),
-(5, NULL, 9, 3, '2025-08-16 22:21:15'),
+(5, 20.00, 9, 3, '2025-08-16 22:21:15'),
 (6, NULL, 9, 3, '2025-08-16 22:57:54'),
-(7, NULL, 9, 3, '2025-08-16 23:37:06');
+(7, NULL, 9, 3, '2025-08-16 23:37:06'),
+(8, NULL, 8, 3, '2025-08-17 18:31:44'),
+(9, 16.00, 4, 10, '2025-08-17 20:22:48'),
+(10, 10.00, 4, 3, '2025-08-17 21:17:43');
 
 -- --------------------------------------------------------
 
@@ -123,22 +126,26 @@ CREATE TABLE `examen` (
   `cExamen` varchar(100) NOT NULL,
   `cCodigoExamen` char(6) NOT NULL,
   `nUsuario` int(11) NOT NULL,
-  `fechaRegistro` timestamp NOT NULL DEFAULT current_timestamp()
+  `fechaRegistro` timestamp NOT NULL DEFAULT current_timestamp(),
+  `bEstado` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `examen`
 --
 
-INSERT INTO `examen` (`nExamen`, `cExamen`, `cCodigoExamen`, `nUsuario`, `fechaRegistro`) VALUES
-(1, 'examenprueba', '070889', 6, '2025-08-16 21:09:47'),
-(3, 'examen2', '083635', 6, '2025-08-16 21:25:21'),
-(4, 'examen5', '658924', 6, '2025-08-16 21:34:39'),
-(5, 'gato', '081161', 6, '2025-08-16 21:44:08'),
-(6, 'examenconelprofe', '877509', 6, '2025-08-17 01:09:10'),
-(7, 'tumama', '464528', 6, '2025-08-17 01:34:41'),
-(8, 'dali', '564737', 6, '2025-08-17 01:49:08'),
-(9, 'canchancho para ingreso U', '491946', 6, '2025-08-17 03:19:50');
+INSERT INTO `examen` (`nExamen`, `cExamen`, `cCodigoExamen`, `nUsuario`, `fechaRegistro`, `bEstado`) VALUES
+(1, 'examenprueba', '070889', 6, '2025-08-16 21:09:47', b'1'),
+(3, 'examen2', '083635', 6, '2025-08-16 21:25:21', b'1'),
+(4, 'examen5', '658924', 6, '2025-08-16 21:34:39', b'1'),
+(5, 'gato', '081161', 6, '2025-08-16 21:44:08', b'1'),
+(6, 'examenconelprofe', '877509', 6, '2025-08-17 01:09:10', b'1'),
+(7, 'tumama', '464528', 6, '2025-08-17 01:34:41', b'1'),
+(8, 'dali', '564737', 6, '2025-08-17 01:49:08', b'1'),
+(9, 'canchancho para ingreso U', '491946', 6, '2025-08-17 03:19:50', b'1'),
+(10, 'siosi', '901687', 6, '2025-08-17 05:26:19', b'1'),
+(11, 'examen resivion', '742884', 6, '2025-08-18 00:21:01', b'1'),
+(12, '12', '552013', 6, '2025-08-18 01:25:43', b'1');
 
 -- --------------------------------------------------------
 
@@ -215,7 +222,10 @@ INSERT INTO `pregunta` (`nPregunta`, `cPregunta`, `nPrueba`, `nExamen`) VALUES
 (11, 'que es esto?', 1, 6),
 (12, 'wtf?', 2, 7),
 (13, 'qqqq', 3, 8),
-(14, 'quien este individuo', 4, 9);
+(14, 'quien este individuo', 4, 9),
+(15, 'asdasda', 4, 10),
+(16, 'qwqw', 4, 11),
+(17, 'asdasd', 3, 12);
 
 -- --------------------------------------------------------
 
@@ -268,14 +278,21 @@ INSERT INTO `respuesta` (`nRespuesta`, `nPregunta`, `cRespuesta`, `nCalificacion
 (3, 3, 'asdaasd', 2, NULL),
 (4, 4, 'asdasd', 2, NULL),
 (5, 5, 'asdas', 2, NULL),
-(6, 6, 'respuesta 1', 3, NULL),
-(7, 7, 'respuetsa 2', 3, NULL),
-(8, 8, 'respuesta 3', 3, NULL),
+(6, 6, 'respuesta 1', 3, 'bienmal'),
+(7, 7, 'respuetsa 2', 3, 'mal'),
+(8, 8, 'respuesta 3', 3, 'bien'),
 (9, 10, 'es mi ex', 4, NULL),
 (10, 11, 'un escudo', 4, NULL),
 (11, 14, 'Esnayder Josbeth Aguilar Canchachi', 5, NULL),
 (12, 14, 'kinkleon', 6, NULL),
-(13, 14, 'asdasda', 7, NULL);
+(13, 14, 'asdasda', 7, NULL),
+(14, 13, 'holaaa', 8, NULL),
+(15, 6, 'siosi', 9, NULL),
+(16, 7, 'ono', 9, NULL),
+(17, 8, 'osino', 9, NULL),
+(18, 6, '123123', 10, NULL),
+(19, 7, '12asd', 10, NULL),
+(20, 8, 'asdasd', 10, NULL);
 
 -- --------------------------------------------------------
 
@@ -411,7 +428,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `calificacion`
 --
 ALTER TABLE `calificacion`
-  MODIFY `nCalificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `nCalificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `especie`
@@ -423,7 +440,7 @@ ALTER TABLE `especie`
 -- AUTO_INCREMENT de la tabla `examen`
 --
 ALTER TABLE `examen`
-  MODIFY `nExamen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `nExamen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `familia`
@@ -441,7 +458,7 @@ ALTER TABLE `genero`
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  MODIFY `nPregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `nPregunta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `prueba`
@@ -453,7 +470,7 @@ ALTER TABLE `prueba`
 -- AUTO_INCREMENT de la tabla `respuesta`
 --
 ALTER TABLE `respuesta`
-  MODIFY `nRespuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `nRespuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`

@@ -96,6 +96,12 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                             <span>Gestión de Exámenes</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#panel-revision-examenes" class="sidebar-btn">
+                            <img src="https://api.iconify.design/material-symbols/rate-review-outline.svg?color=currentColor" class="sidebar-icon" alt="Revisión de Exámenes">
+                            <span>Revision de Examenes</span>
+                        </a>
+                    </li>
                 </ul>
             </aside>
 
@@ -366,6 +372,38 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                                 </thead>
                                 <tbody id="examenes-guardados-body">
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel-revision-examenes" class="content-panel">
+                    <h3>Revisión de Exámenes</h3>
+                    <div class="form-section">
+                        <h4>Código de Examen</h4>
+                        <form id="form-buscar-examen">
+                            <div class="form-group">
+                                <label for="codigoExamen">Código</label>
+                                <input type="text" id="codigoExamen" name="codigoExamen" placeholder="Ej: XYZ123" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Buscar Examen</button>
+                        </form>
+                    </div>
+
+                    <div class="table-section">
+                        <h4>Resultados del Examen: <span id="nombre-examen-resultado"></span></h4>
+                        <div class="table-container">
+                            <table id="table-resultados-examen">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>APELLIDOS Y NOMBRES</th>
+                                        <th>CALIFICACIÓN</th>
+                                        <th>VER RESPUESTAS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    </tbody>
                             </table>
                         </div>
                     </div>
