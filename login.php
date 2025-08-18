@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     "cUsuario" => $usuario["cUsuario"] ?? ''
                 ];
 
-                echo "<script>alert('Inicio de sesión exitoso'); window.location.href='index.php';</script>";
+                echo "<script>alert('Inicio de sesión exitoso'); window.location.href='muestras.php';</script>";
             } else {
                 echo "<script>alert('Contraseña incorrecta'); window.location.href='login.php';</script>";
             }

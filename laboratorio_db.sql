@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-08-2025 a las 04:38:43
+-- Tiempo de generación: 18-08-2025 a las 20:44:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -82,7 +82,7 @@ CREATE TABLE `calificacion` (
 --
 
 INSERT INTO `calificacion` (`nCalificacion`, `cCalificacion`, `nExamen`, `nUsuario`, `fechaRegistro`) VALUES
-(1, NULL, 1, 3, '2025-08-16 19:33:06'),
+(1, 10.00, 1, 3, '2025-08-16 19:33:06'),
 (2, 10.60, 3, 3, '2025-08-16 19:38:30'),
 (3, 19.00, 4, 3, '2025-08-16 19:51:20'),
 (4, NULL, 6, 3, '2025-08-16 20:10:20'),
@@ -273,8 +273,8 @@ CREATE TABLE `respuesta` (
 --
 
 INSERT INTO `respuesta` (`nRespuesta`, `nPregunta`, `cRespuesta`, `nCalificacion`, `cComentario`) VALUES
-(1, 1, 'asda', 1, NULL),
-(2, 2, 'asdas', 1, NULL),
+(1, 1, 'asda', 1, 'esta bien'),
+(2, 2, 'asdas', 1, 'esta mal'),
 (3, 3, 'asdaasd', 2, NULL),
 (4, 4, 'asdasd', 2, NULL),
 (5, 5, 'asdas', 2, NULL),
@@ -311,7 +311,8 @@ CREATE TABLE `rol` (
 
 INSERT INTO `rol` (`nRol`, `cRol`) VALUES
 (1, 'Alumno'),
-(2, 'Docente');
+(2, 'Docente'),
+(3, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -335,10 +336,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`nUsuario`, `cContrasena`, `nRol`, `cDNI`, `cApePaterno`, `cApeMaterno`, `cNombres`, `cCorreo`) VALUES
-(3, '$2y$10$RfPZajyGj61aDRJQ4OwZ6.6KDx1.GWu416s8G.l.VR0yJmsE64EUK', 1, '46862829', 'MILLER', 'HERRERA', 'JESUS ALFONSO  ', 'articulosydis@gmail.com'),
+(3, '$2y$10$RfPZajyGj61aDRJQ4OwZ6.6KDx1.GWu416s8G.l.VR0yJmsE64EUK', 1, '46862829', 'MILLER', 'HERRERA', 'JESUS ALFONSO', 'articulosydis@gmail.com'),
 (6, '$2y$10$NpT8n/4/SAxvDbSUm/SBFuJDXxVtJ9STRz/i.m3wsY72Y9Z8U9V8C', 2, '75109606', 'VASQUEZ', 'MILLER', 'CRISTIAN SEBASTIAN', 'cristiansvm17@gmail.com'),
-(7, '$2y$10$xOTKZze.lTvZE.bPFN8naONkUwMOCZaWuxcB9O8JmGR2caLtdMGm2', 2, '74022913', 'AGUILAR', 'CANCHACHI', 'JHOSBETH ESNAYDER', 'aguilarcanchachij@iestptrujillo.net'),
-(10, '$2y$10$J5S3Phw1GAUnlSCUpO/bJObfnWgESofRWHL5i9c0uEYS99IpQQLtG', 1, '75338379', 'RODRIGUEZ', 'HUAMÁN', 'ADA ABIGAIL', 'ada@gmail.com');
+(7, '$2y$10$xOTKZze.lTvZE.bPFN8naONkUwMOCZaWuxcB9O8JmGR2caLtdMGm2', 3, '74022913', 'AGUILAR', 'CANCHACHI', 'JHOSBETH ESNAYDER', 'aguilarcanchachij@iestptrujillo.net'),
+(10, '$2y$10$J5S3Phw1GAUnlSCUpO/bJObfnWgESofRWHL5i9c0uEYS99IpQQLtG', 1, '75338379', 'RODRIGUEZ', 'HUAMÁN', 'ADA ABIGAIL', 'ada1234@gmail.com');
 
 --
 -- Índices para tablas volcadas
@@ -476,7 +477,7 @@ ALTER TABLE `respuesta`
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `nRol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `nRol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

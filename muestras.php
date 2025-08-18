@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$usuarioNombre = ""; // Definir por defecto para evitar errores de variable no definida
+$usuarioNombre = ""; // Valor por defecto
 
 if (!isset($_SESSION['usuario'])) {
     header("Location: login.php");
@@ -19,13 +19,15 @@ try {
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario) {
-        $usuarioNombre = htmlspecialchars($usuario['cNombres']); // Guardamos para otras partes
+        $usuarioNombre = htmlspecialchars($usuario['cNombres']);
         $rol = $usuario['nRol'];
 
         if ($rol == 1) {
             include 'vista_alumno.php';
         } elseif ($rol == 2) {
             include 'vista_docente.php';
+        } elseif ($rol == 3) {
+            include 'vista_admin.php';
         } else {
             echo "Rol no reconocido.";
         }
