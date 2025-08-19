@@ -50,56 +50,29 @@ $usuarioNombre = isset($_SESSION["usuario"]["cNombres"]) ? $_SESSION["usuario"][
     
             <div class="blog-grid">
                 <article class="blog-post">
-                    <img src="imagenes/images1.jpeg" alt="Imagen de Análisis de Sangre" class="post-img">
+                    <img src="imagenes/1.png" alt="Imagen de Análisis de Sangre" class="post-img">
                     <div class="post-content">
-                        <h3>La Importancia de los Análisis de Sangre Anuales</h3>
-                        <p>Descubre por qué un simple análisis de sangre puede ser la clave para la detección temprana de enfermedades y el mantenimiento de tu bienestar general...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
+                        <h3>Guia sobre los metodos de identificación bioquimica</h3>
+                        <p>Conoce los principales métodos bioquímicos utilizados para identificar bacterias de acuerdo a los resultados obtenidos en las pruebas mas comunes.</p>
+                        <a href="powerpoint/IdentificacionBioquimica.pptx" class="read-more" download>Descargar Guía &rarr;</a>
                     </div>
                 </article>
     
                 <article class="blog-post">
-                    <img src="imagenes/orina2.jpeg" alt="Imagen de Muestra de Orina" class="post-img">
+                    <img src="imagenes/2.jpg" alt="Imagen de Muestra de Orina" class="post-img">
                     <div class="post-content">
-                        <h3>Guía Práctica: Cómo Prepararte para un Análisis de Orina</h3>
-                        <p>Una correcta preparación es fundamental para obtener resultados precisos. Te explicamos paso a paso lo que necesitas saber antes de tu prueba de orina...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
+                        <h3>Guía sobre las pruebas bioquimicas</h3>
+                        <p>La identificación del género de enterobacterias se basa en un conjunto de pruebas bioquímicas, como las IMViC (Indol, Rojo de metilo, Voges-Proskauer y Citrato), entre otras, que permiten una caracterización precisa a nivel microbiológico.</p>
+                        <a href="powerpoint/PruebasBioquimicas.pptx" class="read-more" download>Descargar Guía &rarr;</a>
                     </div>
                 </article>
     
                 <article class="blog-post">
-                    <img src="imagenes/genes3.jpeg" alt="Imagen de ADN" class="post-img">
+                    <img src="imagenes/3.png" alt="Imagen de ADN" class="post-img">
                     <div class="post-content">
-                        <h3>El Futuro de la Medicina: Análisis Genéticos en Laboratorio</h3>
-                        <p>Explora cómo la secuenciación de ADN y los estudios genéticos están revolucionando el diagnóstico, el tratamiento y la prevención de enfermedades...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
-                    </div>
-                </article>
-                
-                <article class="blog-post">
-                    <img src="imagenes/sangre4.jpg" alt="Imagen de Microscopio" class="post-img">
-                    <div class="post-content">
-                        <h3>Descifrando los Resultados: Glóbulos Rojos, Blancos y Plaquetas</h3>
-                        <p>Te ayudamos a entender qué significan esos valores en tu hemograma y cómo influyen en la salud de tu cuerpo...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
-                    </div>
-                </article>
-
-                <article class="blog-post">
-                    <img src="imagenes/diabate5.jpeg" alt="Imagen de glucómetro" class="post-img">
-                    <div class="post-content">
-                        <h3>Diabetes y el Control de Glucosa: Lo que Necesitas Saber</h3>
-                        <p>Una guía completa sobre el control de la glucosa, la importancia de los análisis de rutina y los pasos para vivir una vida saludable con diabetes...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
-                    </div>
-                </article>
-
-                <article class="blog-post">
-                    <img src="imagenes/cerebro6.jpg" alt="Imagen de hormonas" class="post-img">
-                    <div class="post-content">
-                        <h3>La Influencia de las Hormonas en tu Bienestar Diario</h3>
-                        <p>Conoce la función de las hormonas en tu cuerpo y cómo los análisis hormonales pueden detectar desequilibrios que afectan tu energía y estado de ánimo...</p>
-                        <a href="#" class="read-more">Leer más &rarr;</a>
+                        <h3>Guía sobre el métdo de lisina hierro agar</h3>
+                        <p>Este medio de diagnostico diferencial detecta bacterias que fermentan la lactosa a través de la actividad de la lisina descarboxilasa</p>
+                        <a href="powerpoint/LIA.pptx" class="read-more" download>Descargar Guía &rarr;</a>
                     </div>
                 </article>
             </div>
