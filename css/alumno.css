@@ -1,7 +1,4 @@
-
-        /* ========================================= */
         /* == ESTILOS GLOBALES Y VARIABLES CSS == */
-        /* ========================================= */
         :root {
             --primary-color: #00aaff;
             --primary-dark: #0088cc;
@@ -37,10 +34,8 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
-        /* ========================================= */
+
         /* == ENCABEZADO Y NAVEGACIÓN PRINCIPAL == */
-        /* ========================================= */
         .header {
             background: var(--bg-light);
             border-bottom: 3px solid var(--primary-color);
@@ -130,10 +125,8 @@
             border-radius: 2px;
             transition: all 0.3s ease;
         }
-        
-        /* ========================================= */
+
         /* == LAYOUT DEL PANEL DE GESTIÓN == */
-        /* ========================================= */
         .management-wrapper {
             display: flex;
             gap: 30px;
@@ -204,360 +197,8 @@
         .content-panel.active {
             display: block;
         }
-        
-        /* ========================================= */
-        /* == MEJORAS EN FORMULARIOS Y TABLAS == */
-        /* ========================================= */
-        .panel-layout {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 20px;
-        }
 
-        .form-section, .table-section {
-            background: #fdfdfd;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-            margin-top: 20px;
-            /* CAMBIO: Se ha aumentado el ancho máximo para reducir el espacio en blanco */
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .form-section:first-child,
-        .table-section:first-child {
-            margin-top: 0;
-        }
-
-        .management-content h2, .management-content h3 {
-            color: var(--primary-dark);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .management-content h4 {
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            font-size: 1.25em;
-            text-align: center;
-        }
-
-        .management-content form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .management-content label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .management-content input[type="text"], 
-        .management-content select, 
-        .management-content textarea, 
-        .management-content input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .management-content input[type="text"]:focus, 
-        .management-content select:focus, 
-        .management-content textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 5px var(--shadow-light);
-        }
-        
-        /* --- Estilos para botones de acción --- */
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px; /* Aplicado a todos los botones */
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        
-        .btn-submit {
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            align-self: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        #mostrarFormularioBtn,
-        #saveButton {
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            align-self: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* --- ESTILOS MEJORADOS PARA TABLAS --- */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .management-content table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .management-content th, .management-content td {
-            padding: 15px 20px;
-            text-align: left;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .management-content th {
-            background-color: #f1f3f5;
-            font-weight: 600;
-            color: #495057;
-            text-transform: uppercase;
-            font-size: 0.85em;
-        }
-
-        .management-content tr:hover {
-            background-color: #f8f9fa;
-            transition: background-color 0.2s ease;
-        }
-
-        .management-content tr:last-child td {
-            border-bottom: none;
-        }
-
-        .table-actions {
-            white-space: nowrap;
-        }
-        
-        .table-actions a.btn-action {
-            display: inline-block;
-            background: none;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            margin-right: 5px;
-        }
-
-        .table-actions a.btn-action:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .table-actions a.btn-delete {
-            display: inline-block;
-            border: 1px solid #dc3545;
-            padding: 5px 10px;
-            border-radius: 5px;
-             margin-right: 5px;
-            color: #dc3545;
-        }
-
-        .table-actions a.btn-delete:hover {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        /* ========================================= */
-        /* == ESTILOS ESPECÍFICOS PARA LAS CARTAS DE PRUEBAS == */
-        /* ========================================= */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        #mostrarFormularioBtn {
-            flex-grow: 1;
-            padding: 15px 20px; /* Tamaño del botón */
-            font-size: 1.1em;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px var(--shadow-dark);
-        }
-        #mostrarFormularioBtn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px var(--shadow-dark);
-        }
-
-        #formularioProducto {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            /* CAMBIO: Se ha añadido display:grid y grid-template-columns para el diseño de 2 columnas */
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-            margin-top: 30px; /* Espacio superior para separarlo del botón */
-        }
-        #formularioProducto label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        #formularioProducto select,
-        #formularioProducto input,
-        #formularioProducto textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #ccc;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-        #formularioProducto textarea {
-            resize: vertical;
-            min-height: 80px;
-            max-height: 250px;
-        }
-        #formularioProducto button {
-            grid-column: span 2;
-        }
-        .form-buttons {
-            grid-column: span 2;
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end; /* Alinea los botones a la derecha */
-            margin-top: 20px; /* Añade un margen superior para separarlo del campo de imagen */
-        }
-        .form-buttons button {
-            flex: 0 1 auto;
-        }
-        
-        .lista-productos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 25px;
-            justify-content: center;
-        }
-        .producto {
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        .producto img {
-            width: 100%;
-            height: 140px;
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
-        .producto-title {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            height: 2.4em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .producto-subtitle {
-            font-style: italic;
-            color: #555;
-            margin-bottom: 5px;
-        }
-        .producto-info {
-            font-size: 0.9em;
-            text-align: left;
-            margin-top: 10px;
-        }
-        .card-buttons {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .card-buttons button {
-            padding: 10px 15px;
-            border-radius: 5px;
-            border: none;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            flex-grow: 1;
-        }
-        .btn-edit-card {
-            background-color: #28a745;
-        }
-        .btn-delete-card {
-            background-color: #dc3545;
-        }
-
-        /* ========================================= */
-        /* == ESTILOS ESPECÍFICOS PARA EL CREADOR DE EXAMENES == */
-        /* ========================================= */
+        /* == ESTILOS ESPECÍFICOS PARA EL CONTENIDO DEL PANEL == */
         .management-content .card {
             background: #fdfdfd;
             border: 1px solid #e0e0e0;
@@ -573,51 +214,280 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        
+
+        .management-content .card-title-center {
+            text-align: center;
+            width: 100%;
+        }
+
         .management-content .grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
-        
-        .management-content .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
+
+        .management-content .form-group {
+            margin-bottom: 15px;
         }
-        
-        .management-content .preview-img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-            border-radius: 8px;
+
+        .management-content label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .management-content input[type="text"],
+        .management-content input[type="date"],
+        .management-content textarea {
+            width: 100%;
+            padding: 12px;
             border: 1px solid #ccc;
-        }
-        
-        .management-content .examen-list {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
-        
-        .management-content .footer {
+
+        .management-content input:focus,
+        .management-content textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .management-content .actions {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .management-content .info-text {
-            font-size: 0.85rem;
-            color: #718096;
-            margin-top: 15px;
+            margin-top: 25px;
         }
 
-        /* ========================================= */
+        .management-content .btn-primary,
+        .management-content .btn-secondary,
+        .management-content .btn-submit {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .management-content .btn-primary, .management-content .btn-submit {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        .management-content .btn-secondary {
+            background-color: #e0e0e0;
+            color: var(--text-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .management-content .btn-primary:hover, .management-content .btn-secondary:hover, .management-content .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px var(--shadow-dark);
+        }
+
+        .management-content h3 {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .management-content h4 {
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        /* == Estilos para centrar el formulario de Acceder a Examen == */
+        .centered-form-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+
+        .centered-form-container form {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .centered-form-container .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* == ESTILOS ESPECÍFICOS PARA EL EXAMEN ACTIVO == */
+        .examen-pregunta {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color); /* Línea para separar preguntas */
+            padding-bottom: 20px;
+        }
+
+        .examen-pregunta:last-child {
+            border-bottom: none; /* No mostrar línea en la última pregunta */
+        }
+
+        .examen-pregunta h4 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+            text-align: left;
+        }
+
+        .examen-pregunta label {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .examen-pregunta img {
+            max-width: 100%;
+            height: auto;
+            max-height: 180px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .examen-pregunta textarea {
+            min-height: 50px;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .examen-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        /* == NUEVOS ESTILOS PARA LA PÁGINA DE RESULTADOS == */
+        #contenedor-resultados {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .resumen-calificacion {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .calificacion-card {
+            background-color: var(--primary-light);
+            padding: 30px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 6px 15px var(--shadow-light);
+            border: 2px solid var(--primary-dark);
+            width: 100%;
+            max-width: 400px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .calificacion-titulo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .calificacion-valor {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+
+        .calificacion-card.aprobado {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .calificacion-card.aprobado .calificacion-valor {
+            color: #28a745;
+        }
+
+        .calificacion-card.reprobado {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .calificacion-card.reprobado .calificacion-valor {
+            color: #dc3545;
+        }
+        
+        .contenedor-resultados-detalle {
+            margin-top: 20px;
+        }
+
+        .resultado-pregunta {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .resultado-pregunta.correcta {
+            border-left: 5px solid #28a745;
+            background-color: #f0fdf4;
+        }
+
+        .resultado-pregunta.incorrecta {
+            border-left: 5px solid #dc3545;
+            background-color: #fff5f5;
+        }
+
+        .resultado-pregunta h4 {
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        .resultado-pregunta .respuesta-correcta,
+        .resultado-pregunta .respuesta-usuario {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .resultado-pregunta .respuesta-correcta {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .resultado-pregunta .respuesta-usuario {
+            font-style: italic;
+            color: #555;
+        }
+
+        .resultado-pregunta .nota-pregunta {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Animación para la calificación */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* == ESTILOS DE RESPUESTA (RESPONSIVE) == */
-        /* ========================================= */
         @media (max-width: 992px) {
             .management-wrapper {
                 flex-direction: column;
@@ -650,12 +520,13 @@
         }
 
         @media (max-width: 768px) {
-            .hamburger { display: flex;
+            .hamburger {
+                display: flex;
             }
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 91px; /* Adjust if header height changes */
+                top: 91px;
                 gap: 0;
                 flex-direction: column;
                 background-color: var(--bg-light);
@@ -665,18 +536,27 @@
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
             }
-            .nav-menu.active { left: 0;
+            .nav-menu.active {
+                left: 0;
             }
-            .nav-list { flex-direction: column; gap: 0; width: 100%;
+            .nav-list {
+                flex-direction: column;
+                gap: 0;
+                width: 100%;
             }
-            .nav-item { border-top: 1px solid #eee;
+            .nav-item {
+                border-top: 1px solid #eee;
             }
-            .nav-link { display: block; padding: 20px 0;
+            .nav-link {
+                display: block;
+                padding: 20px 0;
             }
-            .btn-login { margin: 20px 0;
+            .btn-login {
+                margin: 20px 0;
             }
 
-            .management-content th, .management-content td {
+            .management-content th,
+            .management-content td {
                 padding: 12px 15px;
             }
 
@@ -704,7 +584,7 @@
                 max-width: 300px;
                 margin: auto;
             }
-            
+
             .management-content .grid {
                 grid-template-columns: 1fr;
             }

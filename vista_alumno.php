@@ -1,6 +1,5 @@
 <?php
 require_once 'conexion.php';
-
 if (!isset($_SESSION["usuario"]["nUsuario"]) || !isset($_SESSION["usuario"]["nRol"])) {
     die("Acceso no autorizado: usuario no identificado.");
 }
@@ -24,7 +23,7 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Estudiante";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Gestión de Laboratorio</title>
-    <link rel="stylesheet" href="css/vista_examen.css">
+    <link rel="stylesheet" href="css/alumno.css">
 </head>
 <body>
     <header class="header">
@@ -125,9 +124,12 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Estudiante";
                                 <button type="submit" class="btn-primary">Ver Resultados</button>
                             </form>
                         </div>
+
                         <div id="contenedor-resultados" style="display:none;">
-                            <div id="resumen-nota"></div>
-                            <div id="contenedor-respuestas-revisadas"></div>
+                            <div class="resumen-calificacion">
+                                <div id="resumen-nota" class="calificacion-card"></div>
+                            </div>
+                            <div id="contenedor-respuestas-revisadas" class="contenedor-resultados-detalle"></div>
                         </div>
                     </div>
                 </div>

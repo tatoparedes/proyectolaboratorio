@@ -1,8 +1,12 @@
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('nav-menu');
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
 
+    // Verifica que ambos elementos existen antes de agregar el evento
+    if (hamburger && navMenu) {
         hamburger.addEventListener('click', () => {
-            // Toggles the 'active' class on both the hamburger and the menu
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
+    }
+});

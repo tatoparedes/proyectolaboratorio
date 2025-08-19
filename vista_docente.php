@@ -1,5 +1,4 @@
 <?php
-// PHP Authentication: Ensures only authenticated users with a specific role can access the page.
 require_once 'conexion.php';
 if (!isset($_SESSION["usuario"]["nUsuario"]) || !isset($_SESSION["usuario"]["nRol"])) {
     die("Acceso no autorizado: usuario no identificado.");
@@ -32,7 +31,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
             <div class="logo">
                 <img src="imagenes/logo.jpg" alt="Logo Laboratorio">
             </div>
-
             <nav class="nav-menu" id="nav-menu">
                 <ul class="nav-list">
                     <li class="nav-item"><a href="index.php" class="nav-link">Inicio</a></li>
@@ -47,7 +45,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                     <a href="login.php" class="btn-login">Iniciar Sesión</a>
                 <?php endif; ?>
             </nav>
-
             <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -249,7 +246,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
 
                 <div id="panel-pruebas" class="content-panel">
                     <h3>Gestión de Pruebas</h3>
-                    
                     <div class="form-section">
                         <h4>Agregar / Editar Prueba</h4>
                         <div class="action-buttons">
@@ -259,7 +255,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                             <input type="hidden" name="idusuario" value="6">
                             <input type="hidden" name="nPrueba" id="nPrueba" value="0">
                             <input type="hidden" name="accion" id="accion" value="agregar">
-                            
                             <div>
                                 <label for="familiaSelect">Seleccionar Familia:</label>
                                 <select id="familiaSelect" name="nFamilia" required>
@@ -272,7 +267,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                                     <option value="" disabled selected>-- Elige un género --</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label for="especieSelect">Seleccionar Especie:</label>
                                 <select id="especieSelect" name="nEspecie" required disabled>
@@ -283,7 +277,6 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                                 <label for="nombrePruebaInput">Nombre de la Bacteria:</label>
                                 <input type="text" id="nombrePruebaInput" name="cBacteria" required>
                             </div>
-                            
                             <div style="grid-column: span 2;">
                                 <label for="descripcionInput">Descripción:</label>
                                 <textarea id="descripcionInput" name="cDescripcion" required maxlength="1000"></textarea>
@@ -386,7 +379,7 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                                 <label for="codigoExamen">Código</label>
                                 <input type="text" id="codigoExamen" name="codigoExamen" placeholder="Ej: XYZ123" required>
                             </div>
-                            <button type="submit" class="btn-primary">Buscar Examen</button>
+                            <button type="submit" class="btn-primary btn-buscar">Buscar Examen</button>
                         </form>
                     </div>
 
@@ -403,7 +396,7 @@ $usuarioNombre = $_SESSION["usuario"]["cNombres"] ?? "Docente";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
