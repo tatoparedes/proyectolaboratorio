@@ -10,8 +10,55 @@ $usuarioNombre = isset($_SESSION["usuario"]["cNombres"]) ? $_SESSION["usuario"][
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorio Clínico</title>
     <link rel="stylesheet" href="css/index.css">
+
+    <style>
+        /* ==== ESTILOS DEL MODAL ==== */
+        .modal-banner {
+            display: none; /* Oculto inicialmente */
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 700px;
+            width: 90%;            
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #444;
+        }
+    </style>
 </head>
+
 <body>
+
+<!-- ===================== MODAL ===================== -->
+<div id="modal-banner-1" class="modal-banner">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+
+    <img src="img/productivo.jpg" alt="Banner apertura" style="width:100%; border-radius: 10px;">    
+  </div>
+</div>
+<!-- =================================================== -->
+
+
     <header class="header">
         <div class="container header-container">
             <div class="logo">
